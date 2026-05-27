@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stock Valuation Workbench</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #141a22;
+    --panel2: #1b232e;
+    --line: #293241;
+    --text: #edf2f7;
+    --muted: #9aa7b4;
+    --accent: #4f9cff;
+    --green: #39b56a;
+    --yellow: #d6a538;
+    --red: #ef5b5b;
+    --blue: #7db7ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .wrap { max-width: 1500px; margin: 0 auto; padding: 22px; }
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: end;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  h1 { margin: 0; font-size: 24px; font-weight: 650; }
+  .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .search {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  input {
+    width: 160px;
+    border: 1px solid var(--line);
+    background: #090d12;
+    color: var(--text);
+    border-radius: 6px;
+    padding: 12px 13px;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+  input:focus { outline: none; border-color: var(--accent); }
+  button {
+    border: 0;
+    border-radius: 6px;
+    padding: 12px 16px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 650;
+  }
+  button.secondary { background: var(--panel2); border: 1px solid var(--line); }
+  button:disabled { opacity: .6; cursor: wait; }
+  .notice {
+    display: none;
+    margin-top: 16px;
+    border: 1px solid var(--yellow);
+    background: rgba(214, 165, 56, .12);
+    color: #f4d38b;
+    border-radius: 8px;
+    padding: 14px 16px;
+    line-height: 1.45;
+    font-size: 14px;
+  }
+  .notice.show { display: block; }
+  .error {
+    display: none;
+    margin-top: 16px;
+    border: 1px solid var(--red);
+    background: rgba(239, 91, 91, .12);
+    color: #ffabab;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .error.show { display: block; }
+  .tabs { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+  .tab {
+    background: var(--panel);
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 13px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 650;
+  }
+  .tab.active { color: #fff; border-color: var(--accent); background: rgba(79, 156, 255, .16); }
+  .view { display: none; }
+  .view.active { display: block; }
+  .hero {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .company h2 { margin: 0; font-size: 30px; }
+  .company .meta { color: var(--muted); margin-top: 6px; font-size: 13px; }
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: 800;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+  }
+  .verdict.buy { color: var(--green); border-color: var(--green); background: rgba(57,181,106,.12); }
+  .verdict.hold { color: var(--yellow); border-color: var(--yellow); background: rgba(214,165,56,.12); }
+  .verdict.pass { color: var(--red); border-color: var(--red); background: rgba(239,91,91,.12); }
+  .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+  .metric {
+    background: #0e131a;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 11px;
+  }
+  .metric .label { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+  .metric .value { margin-top: 5px; font-size: 17px; font-weight: 700; }
+  .models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .model h3, .panel h3 { margin: 0 0 4px; font-size: 16px; }
+  .tagline { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+  .score { font-size: 36px; font-weight: 850; margin-bottom: 10px; }
+  .score.good { color: var(--green); }
+  .score.ok { color: var(--yellow); }
+  .score.bad { color: var(--red); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-size: 11px; text-transform: uppercase; font-weight: 650; }
+  td.num { font-family: "SF Mono", Monaco, monospace; text-align: right; }
+  .pt.good { color: var(--green); }
+  .pt.ok { color: var(--yellow); }
+  .pt.bad { color: var(--red); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .chartbox { min-height: 310px; }
+  canvas { width: 100% !important; height: 280px !important; }
+  .insights { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  ul { margin: 10px 0 0; padding-left: 20px; }
+  li { margin: 8px 0; color: #dce5ee; }
+  .muted { color: var(--muted); }
+  .loader {
+    display: none;
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 8px;
+    color: var(--muted);
+  }
+  .loader.show { display: block; }
+  .bar-wrap { height: 8px; background: #090d12; border-radius: 999px; overflow: hidden; margin-top: 8px; }
+  .bar { height: 100%; background: var(--accent); width: 0%; transition: width .25s; }
+  .pill {
+    display: inline-flex;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  .footer { margin: 24px 0 8px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+  @media (max-width: 1050px) {
+    header, .hero, .models, .grid2, .insights { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 620px) {
+    .wrap { padding: 14px; }
+    .search { align-items: stretch; flex-direction: column; }
+    input { width: 100%; }
+    .metric-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Stock Valuation Workbench</h1>
+      <div class="sub">Any ticker · Growth · Dividend · Value+Growth · Peer averages · Predictor · Track record</div>
+    </div>
+    <form class="search" id="searchForm">
+      <input id="ticker" placeholder="NVDA" autocomplete="off" />
+      <button id="runBtn" type="submit">Evaluate</button>
+    </form>
+  </header>
+
+  <div class="notice" id="serverNotice">
+    This page needs the local evaluator server to fetch real market data. Double-click
+    <strong>start_stock_app.command</strong> in this folder, then use
+    <strong>http://127.0.0.1:8765/stock_evaluator.html</strong>.
+  </div>
+  <div class="error" id="errorBox"></div>
+  <div class="loader" id="loader">
+    Pulling fundamentals, peers, price history, scoring models, and building charts...
+    <div class="bar-wrap"><div class="bar" id="progress"></div></div>
+  </div>
+
+  <main id="app" style="display:none;">
+    <section class="hero">
+      <div class="panel company">
+        <h2 id="companyName">—</h2>
+        <div class="meta" id="companyMeta">—</div>
+        <div class="verdict" id="verdict">—</div>
+        <p class="muted" id="verdictMsg"></p>
+        <p class="muted" id="dataQuality"></p>
+        <div class="metric-grid" id="topMetrics"></div>
+      </div>
+      <div class="panel chartbox">
+        <h3>2-Year Price Trend</h3>
+        <div class="tagline">Adjusted close from Yahoo Finance via yfinance</div>
+        <canvas id="priceChart"></canvas>
+      </div>
+    </section>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-view="models">Model Scores</button>
+      <button class="tab" data-view="valuations">Valuations</button>
+      <button class="tab" data-view="peers">Peers & Averages</button>
+      <button class="tab" data-view="predictor">Predictor Status</button>
+      <button class="tab" data-view="track">Track Record</button>
+    </div>
+
+    <section class="view active" id="models"></section>
+    <section class="view" id="valuations"></section>
+    <section class="view" id="peers"></section>
+    <section class="view" id="predictor"></section>
+    <section class="view" id="track"></section>
+
+    <section class="insights">
+      <div class="panel">
+        <h3>What Looks Good</h3>
+        <ul id="strengths"></ul>
+      </div>
+      <div class="panel">
+        <h3>What Needs Review</h3>
+        <ul id="risks"></ul>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">
+    Data source: Yahoo Finance through yfinance. This is useful for screening and internal research.
+    Cross-check client-facing work against your firm's approved market-data system.
+  </div>
+</div>
+
+<script>
+const API = `${location.protocol === 'file:' ? 'http://127.0.0.1:8765' : location.origin}/api/evaluate`;
+let priceChart, peerChart, scoreChart;
+
+const fmt = {
+  money(v) {
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return "n/a";
+    const n = Number(v);
+    if (Math.abs(n) >= 1e12) return "$" + (n / 1e12).toFixed(2) + "T";
+    if (Math.abs(n) >= 1e9) return "$" + (n / 1e9).toFixed(2) + "B";
+    if (Math.abs(n) >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
+    return "$" + n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  },
+  num(v, suffix = "", digits = 2) {
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return "n/a";
+    return Number(v).toLocaleString(undefined, { maximumFractionDigits: digits }) + suffix;
+  },
+  pct(v) { return this.num(v, "%", 1); }
+};
+
+function tier(score, max = 10) {
+  const pct = score / max;
+  if (pct >= .8) return ["good", "Strong"];
+  if (pct >= .5) return ["ok", "Moderate"];
+  return ["bad", "Weak"];
+}
+
+function setLoading(on) {
+  document.getElementById("runBtn").disabled = on;
+  document.getElementById("loader").classList.toggle("show", on);
+  document.getElementById("progress").style.width = on ? "70%" : "0%";
+}
+
+function showError(msg) {
+  const el = document.getElementById("errorBox");
+  el.textContent = msg || "";
+  el.classList.toggle("show", Boolean(msg));
+}
+
+async function evaluateTicker(ticker) {
+  ticker = (ticker || "").trim().toUpperCase();
+  if (!ticker) return showError("Enter a ticker first.");
+  document.getElementById("ticker").value = ticker;
+  showError("");
+  setLoading(true);
+  try {
+    const res = await fetch(`${API}?ticker=${encodeURIComponent(ticker)}`);
+    const payload = await res.json();
+    if (!res.ok || !payload.ok) throw new Error(payload.error || `Request failed (${res.status})`);
+    render(payload);
+  } catch (err) {
+    if (location.protocol === "file:") document.getElementById("serverNotice").classList.add("show");
+    showError(err.message || String(err));
+  } finally {
+    setLoading(false);
+  }
+}
+
+function render(payload) {
+  document.getElementById("serverNotice").classList.remove("show");
+  document.getElementById("app").style.display = "block";
+  const { data, summary } = payload;
+  document.getElementById("companyName").textContent = `${data.ticker} — ${data.name}`;
+  document.getElementById("companyMeta").textContent = `${data.sector || "—"} · ${data.industry || "—"} · as of ${data.asOf || "now"}`;
+  const verdict = document.getElementById("verdict");
+  verdict.textContent = `${summary.recommendation} · ${summary.aggregateScore}/${summary.maxScore}`;
+  verdict.className = `verdict ${summary.recommendation.toLowerCase()}`;
+  document.getElementById("verdictMsg").textContent = `${summary.message} Best fit: ${summary.bestModelName}.`;
+  const dq = data.dataQuality || {};
+  const missing = (dq.missingOrUnavailable || []).join(" ");
+  document.getElementById("dataQuality").textContent =
+    `Data: ${dq.source || "live market data"}. ${missing ? "Unavailable: " + missing : "All required fields returned by source."}`;
+  renderTopMetrics(data);
+  renderModels(payload);
+  renderValuations(payload);
+  renderPeers(payload);
+  renderPredictor(payload);
+  renderTrack(payload);
+  renderInsights(payload);
+  renderPriceChart(payload.chart);
+}
+
+function renderTopMetrics(data) {
+  const items = [
+    ["Price", fmt.money(data.price)],
+    ["Market Cap", fmt.money(data.marketCap)],
+    ["P/E", fmt.num(data.pe, "", 1)],
+    ["Forward P/E", fmt.num(data.fwdPE, "", 1)],
+    ["Revenue Growth", fmt.pct(data.revGrowth)],
+    ["ROE", fmt.pct(data.roe)],
+    ["FCF Yield", fmt.pct(data.fcfYield)],
+    ["Dividend Yield", fmt.pct(data.divYield)]
+  ];
+  document.getElementById("topMetrics").innerHTML = items.map(([label, value]) =>
+    `<div class="metric"><div class="label">${label}</div><div class="value">${value}</div></div>`
+  ).join("");
+}
+
+function renderModels(payload) {
+  const cards = Object.entries(payload.scores).map(([key, model]) => {
+    const [cls, label] = tier(model.total);
+    const rows = model.breakdown.map(row => {
+      const ptCls = row.points === 2 ? "good" : row.points === 1 ? "ok" : "bad";
+      return `<tr>
+        <td>${row.label}</td>
+        <td class="num">${fmt.num(row.value)}</td>
+        <td class="num pt ${ptCls}">${row.scored ? row.points : "—"}</td>
+      </tr>`;
+    }).join("");
+    return `<div class="panel model">
+      <h3>${payload.models[key].name}</h3>
+      <div class="tagline">${payload.models[key].tagline}</div>
+      <div class="score ${cls}">${model.total}/10 <span class="muted" style="font-size:14px;">${label}</span></div>
+      <table><thead><tr><th>Metric</th><th class="num">Value</th><th class="num">Pts</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>`;
+  }).join("");
+  document.getElementById("models").innerHTML = `<div class="models">${cards}</div>`;
+  renderScoreChart(payload);
+}
+
+function renderValuations(payload) {
+  const data = payload.data;
+  const rows = payload.valuations.map(v => {
+    const val = v.unit === "%" ? fmt.pct(v.value) : fmt.money(v.value);
+    const up = v.upside === null || v.upside === undefined ? "—" : fmt.pct(v.upside);
+    return `<tr><td>${v.name}<div class="muted">${v.method}</div></td><td class="num">${val}</td><td class="num">${up}</td></tr>`;
+  }).join("");
+  document.getElementById("valuations").innerHTML = `<div class="grid2">
+    <div class="panel">
+      <h3>Valuation Methods</h3>
+      <div class="tagline">Simple models, each with different weaknesses. Use the spread, not one magic number.</div>
+      <table><thead><tr><th>Method</th><th class="num">Output</th><th class="num">Upside</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>
+    <div class="panel">
+      <h3>Interpretation</h3>
+      <p class="muted">Current price: <strong>${fmt.money(data.price)}</strong></p>
+      <p>Graham is strict and often punishes asset-light compounders. PEG rewards growth but can overtrust estimates. DDM matters only when the dividend is material. FCF yield is the cleanest quick value check when cash flow is stable.</p>
+      <div id="scoreChartBox"><canvas id="scoreChart"></canvas></div>
+    </div>
+  </div>`;
+  renderScoreChart(payload);
+}
+
+function renderPeers(payload) {
+  const rows = payload.peers.peers.map((p, i) => {
+    if (p.error) return `<tr><td>${p.ticker}</td><td colspan="7" class="muted">${p.error}</td></tr>`;
+    return `<tr>
+      <td>${i === 0 ? `<strong>${p.ticker}</strong>` : p.ticker}</td>
+      <td class="num">${fmt.num(p.pe, "", 1)}</td>
+      <td class="num">${fmt.num(p.fwdPE, "", 1)}</td>
+      <td class="num">${fmt.num(p.peg, "", 2)}</td>
+      <td class="num">${fmt.pct(p.roe)}</td>
+      <td class="num">${fmt.pct(p.revGrowth)}</td>
+      <td class="num">${fmt.pct(p.fcfYield)}</td>
+      <td class="num">${p.aggregateScore ?? "—"}</td>
+    </tr>`;
+  }).join("");
+  const avg = payload.peers.averages;
+  document.getElementById("peers").innerHTML = `<div class="grid2">
+    <div class="panel">
+      <h3>Competitor Comparison</h3>
+      <div class="tagline">Peers are inferred from industry where possible, then sector ETF and SPY are added as benchmarks.</div>
+      <table><thead><tr><th>Ticker</th><th class="num">P/E</th><th class="num">Fwd P/E</th><th class="num">PEG</th><th class="num">ROE</th><th class="num">Rev Gr.</th><th class="num">FCF Yld</th><th class="num">Score</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>
+    <div class="panel">
+      <h3>Peer Averages</h3>
+      <div class="metric-grid">
+        <div class="metric"><div class="label">Avg P/E</div><div class="value">${fmt.num(avg.pe, "", 1)}</div></div>
+        <div class="metric"><div class="label">Avg PEG</div><div class="value">${fmt.num(avg.peg, "", 2)}</div></div>
+        <div class="metric"><div class="label">Avg ROE</div><div class="value">${fmt.pct(avg.roe)}</div></div>
+        <div class="metric"><div class="label">Avg FCF Yield</div><div class="value">${fmt.pct(avg.fcfYield)}</div></div>
+      </div>
+      <canvas id="peerChart"></canvas>
+    </div>
+  </div>`;
+  renderPeerChart(payload.peers.peers);
+}
+
+function renderPredictor(payload) {
+  const p = payload.predictor;
+  const band = p.band_stats || {};
+  const model = p.model_stats || {};
+  document.getElementById("predictor").innerHTML = `<div class="grid2">
+    <div class="panel">
+      <h3>Predictor Status</h3>
+      <div class="tagline">No predictions are shown unless backed by real historical calibration data.</div>
+      <p>${p.summary || "Not enough calibration data yet."}</p>
+      ${p.available ? "" : `<p class="muted">This is intentional. The app will not display seed, sample, or illustrative expected returns.</p>`}
+    </div>
+    <div class="panel">
+      <h3>Return Bands</h3>
+      <div class="metric-grid">
+        <div class="metric"><div class="label">Aggregate Band</div><div class="value">${p.band}</div></div>
+        <div class="metric"><div class="label">Median 1Y</div><div class="value">${p.available ? fmt.pct(band.median) : "disabled"}</div></div>
+        <div class="metric"><div class="label">25th-75th</div><div class="value">${p.available ? `${fmt.pct(band.p25)} / ${fmt.pct(band.p75)}` : "disabled"}</div></div>
+        <div class="metric"><div class="label">Best Model Median</div><div class="value">${p.available ? fmt.pct(model.median) : "disabled"}</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTrack(payload) {
+  const rows = (payload.trackRecord || []).slice(0, 20).map(r => `<tr>
+    <td>${r.date}</td><td>${r.ticker}</td><td>${r.rec}</td><td>${r.best_model}</td>
+    <td class="num">${fmt.money(r.price_at_eval)}</td>
+    <td class="num">${r.return_pct === null || r.return_pct === undefined ? "pending" : fmt.pct(r.return_pct)}</td>
+    <td class="num">${r.days_after ?? "—"}</td>
+  </tr>`).join("");
+  document.getElementById("track").innerHTML = `<div class="panel">
+    <h3>Learning Log</h3>
+    <div class="tagline">Every evaluation is saved locally. Later runs compare the call price to current price.</div>
+    <table><thead><tr><th>Date</th><th>Ticker</th><th>Call</th><th>Best Model</th><th class="num">Eval Price</th><th class="num">Return</th><th class="num">Days</th></tr></thead><tbody>${rows || `<tr><td colspan="7" class="muted">No evaluations logged yet.</td></tr>`}</tbody></table>
+  </div>`;
+}
+
+function renderInsights(payload) {
+  const strengths = payload.insights.strengths || [];
+  const risks = payload.insights.risks || [];
+  document.getElementById("strengths").innerHTML = strengths.length ? strengths.map(x => `<li>${x}</li>`).join("") : `<li class="muted">No standout strengths detected yet.</li>`;
+  document.getElementById("risks").innerHTML = risks.length ? risks.map(x => `<li>${x}</li>`).join("") : `<li class="muted">No major red flags from the current rules.</li>`;
+}
+
+function renderPriceChart(points) {
+  const ctx = document.getElementById("priceChart");
+  if (priceChart) priceChart.destroy();
+  priceChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: (points || []).map(p => p.date),
+      datasets: [{ label: "Close", data: (points || []).map(p => p.close), borderColor: "#7db7ff", tension: .25, pointRadius: 0 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: "#9aa7b4", maxTicksLimit: 6 }, grid: { color: "#293241" } }, y: { ticks: { color: "#9aa7b4" }, grid: { color: "#293241" } } } }
+  });
+}
+
+function renderPeerChart(rows) {
+  const clean = rows.filter(r => !r.error);
+  const ctx = document.getElementById("peerChart");
+  if (!ctx) return;
+  if (peerChart) peerChart.destroy();
+  peerChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: clean.map(r => r.ticker),
+      datasets: [
+        { label: "ROE %", data: clean.map(r => r.roe), backgroundColor: "rgba(57,181,106,.75)" },
+        { label: "FCF Yield %", data: clean.map(r => r.fcfYield), backgroundColor: "rgba(79,156,255,.75)" }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: "#edf2f7" } } }, scales: { x: { ticks: { color: "#9aa7b4" }, grid: { color: "#293241" } }, y: { ticks: { color: "#9aa7b4" }, grid: { color: "#293241" } } } }
+  });
+}
+
+function renderScoreChart(payload) {
+  const ctx = document.getElementById("scoreChart");
+  if (!ctx) return;
+  if (scoreChart) scoreChart.destroy();
+  scoreChart = new Chart(ctx, {
+    type: "radar",
+    data: {
+      labels: ["Growth", "Dividend", "Value+Growth"],
+      datasets: [{ label: "Score", data: [payload.scores.growth.total, payload.scores.dividend.total, payload.scores.valGrowth.total], borderColor: "#4f9cff", backgroundColor: "rgba(79,156,255,.22)" }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 10, ticks: { color: "#9aa7b4" }, grid: { color: "#293241" }, angleLines: { color: "#293241" }, pointLabels: { color: "#edf2f7" } } }, plugins: { legend: { display: false } } }
+  });
+}
+
+document.getElementById("searchForm").addEventListener("submit", e => {
+  e.preventDefault();
+  evaluateTicker(document.getElementById("ticker").value);
+});
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(x => x.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.view).classList.add("active");
+  });
+});
+
+if (location.protocol === "file:") document.getElementById("serverNotice").classList.add("show");
+</script>
+</body>
+</html>
