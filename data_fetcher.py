@@ -129,6 +129,10 @@ def fetch_ticker_data(ticker: str) -> dict:
 
         "price": price,
         "marketCap": market_cap,
+        "freeCashflow": free_cf,
+        "sharesOutstanding": shares_out,
+        "totalDebt": safe_get(info, "totalDebt"),
+        "totalCash": safe_get(info, "totalCash"),
         "eps": safe_get(info, "trailingEps") or safe_get(info, "epsTrailingTwelveMonths"),
         "bvps": safe_get(info, "bookValue"),
         "annualDiv": div_rate or 0,
@@ -182,9 +186,58 @@ def fetch_ticker_data(ticker: str) -> dict:
 
 def fetch_price_history(ticker: str, period: str = "5y"):
     """Return a pandas Series of daily closing prices, indexed by date."""
-    import yfinance as yf
-    t = yf.Ticker(ticker.upper())
-    hist = t.history(period=period, auto_adjust=True)
-    if hist.empty:
+    try:
+        import yfinance as yf
+        t = yf.Ticker(ticker.upper())
+        hist = t.history(period=period, auto_adjust=True)
+        if hist is not None and not hist.empty:
+            return hist["Close"]
+    except Exception:
+        pass
+
+    # Fallback: Yahoo's chart endpoint does not require the quoteSummary cookie
+    # flow that sometimes breaks yfinance.history().
+    try:
+        import pandas as pd
+        import requests
+        seconds = {
+            "3mo": 90 * 86400,
+            "6mo": 180 * 86400,
+            "1y": 365 * 86400,
+            "2y": 2 * 365 * 86400,
+            "5y": 5 * 365 * 86400,
+        }.get(period, 5 * 365 * 86400)
+        end = int(datetime.now().timestamp())
+        start = end - seconds
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker.upper()}"
+        params = {
+            "period1": start,
+            "period2": end,
+            "interval": "1d",
+            "events": "history",
+            "includeAdjustedClose": "true",
+        }
+        res = requests.get(url, params=params, timeout=12, headers={"User-Agent": "Mozilla/5.0"})
+        res.raise_for_status()
+        payload = res.json()
+        result = (payload.get("chart", {}).get("result") or [None])[0]
+        if not result:
+            return None
+        timestamps = result.get("timestamp") or []
+        indicators = result.get("indicators", {})
+        adj = (indicators.get("adjclose") or [{}])[0].get("adjclose")
+        close = adj or (indicators.get("quote") or [{}])[0].get("close")
+        if not timestamps or not close:
+            return None
+        rows = [
+            (datetime.fromtimestamp(ts), val)
+            for ts, val in zip(timestamps, close)
+            if val is not None
+        ]
+        if not rows:
+            return None
+        idx = [r[0] for r in rows]
+        vals = [r[1] for r in rows]
+        return pd.Series(vals, index=pd.to_datetime(idx), name="Close")
+    except Exception:
         return None
-    return hist["Close"]

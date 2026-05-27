@@ -135,6 +135,28 @@ def valuation_methods(data):
     return rows
 
 
+def dcf_base(data):
+    total_debt = clean_float(data.get("totalDebt"))
+    total_cash = clean_float(data.get("totalCash"))
+    net_debt = None
+    if total_debt is not None or total_cash is not None:
+        net_debt = (total_debt or 0) - (total_cash or 0)
+    return {
+        "price": clean_float(data.get("price")),
+        "freeCashflow": clean_float(data.get("freeCashflow")),
+        "sharesOutstanding": clean_float(data.get("sharesOutstanding")),
+        "totalDebt": total_debt,
+        "totalCash": total_cash,
+        "netDebt": net_debt,
+        "source": "Yahoo Finance via yfinance",
+        "assumptionsRequired": [
+            "5-year FCF growth rate",
+            "terminal growth rate",
+            "discount rate / required return",
+        ],
+    }
+
+
 def infer_peers(data):
     ticker = data.get("ticker", "").upper()
     industry = (data.get("industry") or "").lower()
@@ -215,14 +237,15 @@ def peer_analysis(data):
 
 def price_chart(ticker):
     try:
-        hist = fetch_price_history(ticker, period="2y")
+        hist = fetch_price_history(ticker, period="5y")
         if hist is None or len(hist) == 0:
             return []
-        # Resample to about 80 points for the browser.
-        step = max(1, len(hist) // 80)
+        # Resample to about 260 points for the browser while keeping the last close.
+        step = max(1, len(hist) // 260)
         sampled = hist.iloc[::step]
         if sampled.index[-1] != hist.index[-1]:
-            sampled = sampled._append(hist.iloc[-1:])
+            import pandas as pd
+            sampled = pd.concat([sampled, hist.iloc[-1:]])
         return [
             {"date": idx.strftime("%Y-%m-%d"), "close": round(float(val), 2)}
             for idx, val in sampled.items()
@@ -282,6 +305,7 @@ def api_payload(ticker):
         "scores": scores,
         "summary": summary,
         "valuations": valuation_methods(data),
+        "dcf": dcf_base(data),
         "peers": peer,
         "chart": price_chart(ticker),
         "insights": strengths_and_risks(scores, data, peer),
@@ -305,6 +329,11 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
+        if parsed.path in ("", "/"):
+            self.send_response(302)
+            self.send_header("Location", "/stock_evaluator.html")
+            self.end_headers()
+            return
         if parsed.path == "/api/evaluate":
             params = parse_qs(parsed.query)
             ticker = (params.get("ticker") or [""])[0].strip().upper()

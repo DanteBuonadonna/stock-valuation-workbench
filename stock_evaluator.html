@@ -59,6 +59,32 @@
     text-transform: uppercase;
   }
   input:focus { outline: none; border-color: var(--accent); }
+  .dcf-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(150px, 1fr)) auto;
+    gap: 10px;
+    align-items: end;
+    margin-top: 14px;
+  }
+  .dcf-field label {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .dcf-field input { width: 100%; }
+  .dcf-result {
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0e131a;
+  }
+  .dcf-result .big {
+    font-size: 28px;
+    font-weight: 850;
+  }
   button {
     border: 0;
     border-radius: 6px;
@@ -161,6 +187,19 @@
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .chartbox { min-height: 310px; }
   canvas { width: 100% !important; height: 280px !important; }
+  .range-buttons { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 8px; }
+  .range-buttons button {
+    background: #0e131a;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+  .range-buttons button.active {
+    color: #fff;
+    border-color: var(--accent);
+    background: rgba(79, 156, 255, .16);
+  }
   .insights { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
   ul { margin: 10px 0 0; padding-left: 20px; }
   li { margin: 8px 0; color: #dce5ee; }
@@ -234,15 +273,24 @@
         <div class="metric-grid" id="topMetrics"></div>
       </div>
       <div class="panel chartbox">
-        <h3>2-Year Price Trend</h3>
-        <div class="tagline">Adjusted close from Yahoo Finance via yfinance</div>
+        <h3>Stock Chart</h3>
+        <div class="tagline">Adjusted close fetched for each ticker</div>
+        <div class="range-buttons" id="chartRanges">
+          <button type="button" data-range="3m">3M</button>
+          <button type="button" data-range="6m">6M</button>
+          <button type="button" data-range="1y">1Y</button>
+          <button type="button" data-range="2y" class="active">2Y</button>
+          <button type="button" data-range="5y">5Y</button>
+        </div>
         <canvas id="priceChart"></canvas>
+        <div class="muted" id="chartStats" style="font-size:12px;margin-top:6px;"></div>
       </div>
     </section>
 
     <div class="tabs" role="tablist">
       <button class="tab active" data-view="models">Model Scores</button>
       <button class="tab" data-view="valuations">Valuations</button>
+      <button class="tab" data-view="dcf">DCF</button>
       <button class="tab" data-view="peers">Peers & Averages</button>
       <button class="tab" data-view="predictor">Predictor Status</button>
       <button class="tab" data-view="track">Track Record</button>
@@ -250,6 +298,7 @@
 
     <section class="view active" id="models"></section>
     <section class="view" id="valuations"></section>
+    <section class="view" id="dcf"></section>
     <section class="view" id="peers"></section>
     <section class="view" id="predictor"></section>
     <section class="view" id="track"></section>
@@ -275,6 +324,8 @@
 <script>
 const API = `${location.protocol === 'file:' ? 'http://127.0.0.1:8765' : location.origin}/api/evaluate`;
 let priceChart, peerChart, scoreChart;
+let currentPayload = null;
+let currentChartRange = "2y";
 
 const fmt = {
   money(v) {
@@ -331,6 +382,7 @@ async function evaluateTicker(ticker) {
 }
 
 function render(payload) {
+  currentPayload = payload;
   document.getElementById("serverNotice").classList.remove("show");
   document.getElementById("app").style.display = "block";
   const { data, summary } = payload;
@@ -347,11 +399,12 @@ function render(payload) {
   renderTopMetrics(data);
   renderModels(payload);
   renderValuations(payload);
+  renderDCF(payload);
   renderPeers(payload);
   renderPredictor(payload);
   renderTrack(payload);
   renderInsights(payload);
-  renderPriceChart(payload.chart);
+  renderPriceChart(payload.chart, currentChartRange);
 }
 
 function renderTopMetrics(data) {
@@ -413,6 +466,111 @@ function renderValuations(payload) {
     </div>
   </div>`;
   renderScoreChart(payload);
+}
+
+function renderDCF(payload) {
+  const dcf = payload.dcf || {};
+  const canRun = dcf.freeCashflow && dcf.sharesOutstanding;
+  document.getElementById("dcf").innerHTML = `<div class="grid2">
+    <div class="panel">
+      <h3>Discounted Cash Flow</h3>
+      <div class="tagline">Base inputs are fetched. Forecast rates are assumptions you enter, so the app does not invent a DCF.</div>
+      <div class="metric-grid">
+        <div class="metric"><div class="label">Current Price</div><div class="value">${fmt.money(dcf.price)}</div></div>
+        <div class="metric"><div class="label">Free Cash Flow</div><div class="value">${fmt.money(dcf.freeCashflow)}</div></div>
+        <div class="metric"><div class="label">Shares Outstanding</div><div class="value">${fmt.num(dcf.sharesOutstanding, "", 0)}</div></div>
+        <div class="metric"><div class="label">Net Debt</div><div class="value">${fmt.money(dcf.netDebt)}</div></div>
+      </div>
+      ${canRun ? `
+        <div class="dcf-controls">
+          <div class="dcf-field">
+            <label for="dcfGrowth">5Y FCF Growth %</label>
+            <input id="dcfGrowth" type="number" step="0.1" placeholder="e.g. 8">
+          </div>
+          <div class="dcf-field">
+            <label for="dcfTerminal">Terminal Growth %</label>
+            <input id="dcfTerminal" type="number" step="0.1" placeholder="e.g. 2.5">
+          </div>
+          <div class="dcf-field">
+            <label for="dcfDiscount">Discount Rate %</label>
+            <input id="dcfDiscount" type="number" step="0.1" placeholder="e.g. 10">
+          </div>
+          <button type="button" onclick="calculateDCF()">Calculate</button>
+        </div>
+        <div class="dcf-result" id="dcfResult">
+          Enter assumptions to calculate intrinsic value per share.
+        </div>
+      ` : `<p class="muted">DCF unavailable because the current data source did not return both free cash flow and shares outstanding.</p>`}
+    </div>
+    <div class="panel">
+      <h3>DCF Method</h3>
+      <p>Formula: project free cash flow for 5 years, discount each year, add terminal value, subtract net debt, divide by shares outstanding.</p>
+      <p class="muted">The forecast rates are not factual historical data. They are investment assumptions and should come from your analyst view, CapIQ estimates, or your firm's process.</p>
+      <table>
+        <thead><tr><th>Input</th><th class="num">Source</th></tr></thead>
+        <tbody>
+          <tr><td>Free Cash Flow</td><td class="num">${dcf.source || "n/a"}</td></tr>
+          <tr><td>Shares Outstanding</td><td class="num">${dcf.source || "n/a"}</td></tr>
+          <tr><td>Cash / Debt</td><td class="num">${dcf.source || "n/a"}</td></tr>
+          <tr><td>Growth / Discount Assumptions</td><td class="num">User-entered</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function calculateDCF() {
+  if (!currentPayload || !currentPayload.dcf) return;
+  const d = currentPayload.dcf;
+  const growth = Number(document.getElementById("dcfGrowth").value);
+  const terminal = Number(document.getElementById("dcfTerminal").value);
+  const discount = Number(document.getElementById("dcfDiscount").value);
+  const result = document.getElementById("dcfResult");
+  if (![growth, terminal, discount].every(Number.isFinite)) {
+    result.textContent = "Enter all three assumptions.";
+    return;
+  }
+  if (discount <= terminal) {
+    result.textContent = "Discount rate must be greater than terminal growth.";
+    return;
+  }
+  const fcf = Number(d.freeCashflow);
+  const shares = Number(d.sharesOutstanding);
+  if (!fcf || !shares) {
+    result.textContent = "DCF unavailable because factual FCF or shares outstanding is missing.";
+    return;
+  }
+  const g = growth / 100;
+  const tg = terminal / 100;
+  const r = discount / 100;
+  let pvFcf = 0;
+  let yearFcf = fcf;
+  const projected = [];
+  for (let year = 1; year <= 5; year++) {
+    yearFcf = yearFcf * (1 + g);
+    const pv = yearFcf / Math.pow(1 + r, year);
+    pvFcf += pv;
+    projected.push({ year, fcf: yearFcf, pv });
+  }
+  const terminalValue = yearFcf * (1 + tg) / (r - tg);
+  const pvTerminal = terminalValue / Math.pow(1 + r, 5);
+  const enterpriseValue = pvFcf + pvTerminal;
+  const equityValue = enterpriseValue - (Number(d.netDebt) || 0);
+  const perShare = equityValue / shares;
+  const upside = d.price ? ((perShare / Number(d.price)) - 1) * 100 : null;
+  const rows = projected.map(x => `<tr><td>Year ${x.year}</td><td class="num">${fmt.money(x.fcf)}</td><td class="num">${fmt.money(x.pv)}</td></tr>`).join("");
+  result.innerHTML = `
+    <div class="big">${fmt.money(perShare)} / share</div>
+    <div class="muted">Implied upside vs current price: ${upside === null ? "n/a" : fmt.pct(upside)}</div>
+    <table style="margin-top:12px;">
+      <thead><tr><th>Projection</th><th class="num">FCF</th><th class="num">Present Value</th></tr></thead>
+      <tbody>
+        ${rows}
+        <tr><td>Terminal Value</td><td class="num">${fmt.money(terminalValue)}</td><td class="num">${fmt.money(pvTerminal)}</td></tr>
+        <tr><td><strong>Equity Value</strong></td><td></td><td class="num"><strong>${fmt.money(equityValue)}</strong></td></tr>
+      </tbody>
+    </table>
+  `;
 }
 
 function renderPeers(payload) {
@@ -494,14 +652,33 @@ function renderInsights(payload) {
   document.getElementById("risks").innerHTML = risks.length ? risks.map(x => `<li>${x}</li>`).join("") : `<li class="muted">No major red flags from the current rules.</li>`;
 }
 
-function renderPriceChart(points) {
+function filterChartPoints(points, range) {
+  points = points || [];
+  if (!points.length) return [];
+  const last = new Date(points[points.length - 1].date);
+  const cutoff = new Date(last);
+  const months = { "3m": 3, "6m": 6, "1y": 12, "2y": 24, "5y": 60 }[range] || 24;
+  cutoff.setMonth(cutoff.getMonth() - months);
+  return points.filter(p => new Date(p.date) >= cutoff);
+}
+
+function renderPriceChart(points, range = "2y") {
+  const filtered = filterChartPoints(points, range);
   const ctx = document.getElementById("priceChart");
   if (priceChart) priceChart.destroy();
+  const first = filtered[0]?.close;
+  const last = filtered[filtered.length - 1]?.close;
+  const ret = first && last ? ((last / first) - 1) * 100 : null;
+  const high = filtered.length ? Math.max(...filtered.map(p => p.close)) : null;
+  const low = filtered.length ? Math.min(...filtered.map(p => p.close)) : null;
+  document.getElementById("chartStats").textContent = filtered.length
+    ? `${range.toUpperCase()} return: ${fmt.pct(ret)} · High: ${fmt.money(high)} · Low: ${fmt.money(low)}`
+    : "No price history returned for this ticker.";
   priceChart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: (points || []).map(p => p.date),
-      datasets: [{ label: "Close", data: (points || []).map(p => p.close), borderColor: "#7db7ff", tension: .25, pointRadius: 0 }]
+      labels: filtered.map(p => p.date),
+      datasets: [{ label: "Adjusted Close", data: filtered.map(p => p.close), borderColor: "#7db7ff", tension: .22, pointRadius: 0, borderWidth: 2 }]
     },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: "#9aa7b4", maxTicksLimit: 6 }, grid: { color: "#293241" } }, y: { ticks: { color: "#9aa7b4" }, grid: { color: "#293241" } } } }
   });
@@ -549,6 +726,15 @@ document.querySelectorAll(".tab").forEach(btn => {
     document.querySelectorAll(".view").forEach(x => x.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById(btn.dataset.view).classList.add("active");
+  });
+});
+
+document.querySelectorAll("#chartRanges button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    currentChartRange = btn.dataset.range;
+    document.querySelectorAll("#chartRanges button").forEach(x => x.classList.remove("active"));
+    btn.classList.add("active");
+    if (currentPayload) renderPriceChart(currentPayload.chart, currentChartRange);
   });
 });
 
