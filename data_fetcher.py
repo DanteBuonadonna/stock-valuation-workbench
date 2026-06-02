@@ -9,8 +9,37 @@ If yfinance is unavailable, this module can also be fed a pre-built dict.
 """
 from __future__ import annotations
 import math
+import time
+import random
 from datetime import datetime, timedelta
 from typing import Optional
+
+
+# Use a realistic browser User-Agent. Yahoo is aggressive about blocking
+# the default Python/requests UA and cloud datacenter IPs.
+_BROWSER_UAS = [
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+]
+
+
+def _get_session():
+    """Build a requests session with realistic browser headers."""
+    try:
+        import requests
+        s = requests.Session()
+        s.headers.update({
+            "User-Agent": random.choice(_BROWSER_UAS),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+        })
+        return s
+    except ImportError:
+        return None
 
 
 def safe_get(d, key, default=None):
@@ -47,14 +76,39 @@ def fetch_ticker_data(ticker: str) -> dict:
             "yfinance not installed. Run: python3 -m pip install --user yfinance"
         ) from e
 
-    t = yf.Ticker(ticker.upper())
+    # Use a browser-like session and retry on transient rate-limits
+    session = _get_session()
+    t = yf.Ticker(ticker.upper(), session=session) if session else yf.Ticker(ticker.upper())
 
     # info dict contains most fundamentals
     info = {}
-    try:
-        info = t.info or {}
-    except Exception as e:
-        raise RuntimeError(f"Could not fetch data for {ticker}: {e}")
+    last_err = None
+    for attempt in range(3):
+        try:
+            info = t.info or {}
+            if info and safe_get(info, "symbol"):
+                break
+        except Exception as e:
+            last_err = e
+            msg = str(e).lower()
+            if "rate limit" in msg or "too many" in msg or "429" in msg:
+                # Wait with jittered backoff before retrying
+                time.sleep(1.5 + attempt * 1.5 + random.random())
+                # Rotate User-Agent on the session
+                if session:
+                    session.headers["User-Agent"] = random.choice(_BROWSER_UAS)
+                continue
+            raise RuntimeError(f"Could not fetch data for {ticker}: {e}")
+    if not info or not safe_get(info, "symbol"):
+        if last_err and ("rate" in str(last_err).lower() or "too many" in str(last_err).lower()):
+            raise RuntimeError(
+                f"Yahoo Finance is rate-limiting this cloud server's IP. "
+                f"This is a known limitation of yfinance from cloud hosts. "
+                f"The fix is to use a paid data API designed for server-side calls "
+                f"(e.g. Financial Modeling Prep, $0 free tier with 250 calls/day). "
+                f"Underlying error: {last_err}"
+            )
+        raise RuntimeError(f"No data found for ticker '{ticker}' — check the symbol.")
 
     if not info or not safe_get(info, "symbol"):
         raise RuntimeError(f"No data found for ticker '{ticker}' — check the symbol.")
