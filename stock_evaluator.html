@@ -226,6 +226,306 @@
     margin-right: 6px;
   }
   .footer { margin: 24px 0 8px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+  /* Plain-English tab descriptions */
+  .tab-intro {
+    background: rgba(79,156,255,.10);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 11px 14px;
+    margin: 0 0 16px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cfd6e3;
+  }
+  .tab-intro strong { color: #fff; }
+  .tab-intro .what-look { display: block; margin-top: 4px; color: #9aa7b4; font-size: 12px; }
+
+  /* Portfolio fit + memo */
+  .pf-upload {
+    border: 1px dashed var(--line);
+    background: #0e131a;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 10px 0;
+  }
+  .pf-upload textarea {
+    width: 100%;
+    min-height: 120px;
+    background: #090d12;
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px;
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 12.5px;
+  }
+  .pf-upload textarea:focus { outline: none; border-color: var(--accent); }
+  .pf-controls { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+  .pf-controls input[type=number] { width: 160px; padding: 8px; font-size: 13px; font-weight: 500; letter-spacing: normal; text-transform: none; }
+  .pf-result-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; margin-top: 14px; }
+  @media (max-width: 1000px) { .pf-result-grid { grid-template-columns: 1fr; } }
+  .pf-suggested {
+    background: linear-gradient(135deg, rgba(57,181,106,.12), rgba(79,156,255,.08));
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .pf-suggested .big { font-size: 30px; font-weight: 800; color: var(--green); font-family: "SF Mono", Monaco, monospace; }
+  .pf-warn {
+    background: rgba(239,91,91,.10);
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: #ffabab;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .corr-cell.high { color: var(--red); font-weight: 700; }
+  .corr-cell.med  { color: var(--yellow); font-weight: 700; }
+  .corr-cell.low  { color: var(--green); font-weight: 700; }
+
+  /* Briefing tab — the centerpiece */
+  .briefing-header {
+    display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center;
+    margin: 14px 0;
+  }
+  .briefing-counts {
+    display: flex; gap: 18px; font-size: 13px;
+  }
+  .briefing-counts .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 12px; font-weight: 600;
+  }
+  .briefing-counts .badge.urgent { color: var(--red); border-color: var(--red); background: rgba(239,91,91,.10); }
+  .briefing-counts .badge.important { color: var(--yellow); border-color: var(--yellow); background: rgba(214,165,56,.10); }
+  .briefing-counts .badge.fyi { color: var(--blue); border-color: var(--accent); background: rgba(79,156,255,.10); }
+  .briefing-meta { color: var(--muted); font-size: 12px; }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: linear-gradient(135deg, rgba(79,156,255,.18), rgba(57,181,106,.14));
+    border: 1px solid var(--accent); color: var(--blue);
+    padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  }
+  .ai-disabled-note {
+    background: rgba(214,165,56,.10); border: 1px solid var(--yellow);
+    color: #f4d38b; border-radius: 8px; padding: 12px 16px;
+    font-size: 13px; line-height: 1.55; margin: 14px 0;
+  }
+  .ai-disabled-note code { background: rgba(0,0,0,.3); padding: 1px 6px; border-radius: 3px; }
+
+  .briefing-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 16px 18px; margin-bottom: 12px;
+    border-left: 4px solid var(--line);
+  }
+  .briefing-card.urgent { border-left-color: var(--red); }
+  .briefing-card.important { border-left-color: var(--yellow); }
+  .briefing-card.fyi { border-left-color: var(--accent); }
+  .briefing-card.done { opacity: 0.55; }
+  .briefing-card .top {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .briefing-card .who {
+    color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+  }
+  .briefing-card .headline {
+    font-size: 15px; font-weight: 700; line-height: 1.4; margin-top: 4px;
+  }
+  .briefing-card .cat-tag {
+    display: inline-block; background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 999px; padding: 3px 9px; font-size: 11px; color: var(--muted);
+    margin-right: 6px;
+  }
+  .briefing-card .cat-tag.tax { color: var(--green); border-color: var(--green); background: rgba(57,181,106,.10); }
+  .briefing-card .cat-tag.port { color: var(--accent); border-color: var(--accent); background: rgba(79,156,255,.10); }
+  .briefing-card .cat-tag.rel { color: var(--yellow); border-color: var(--yellow); background: rgba(214,165,56,.10); }
+  .briefing-card .data-line {
+    color: var(--muted); font-size: 12.5px; margin-top: 4px; font-family: "SF Mono", Monaco, monospace;
+  }
+  .draft-block {
+    background: #0e131a; border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px; margin-top: 12px;
+  }
+  .draft-block .subject {
+    font-weight: 700; font-size: 13.5px; margin-bottom: 8px; color: #cfd6e3;
+  }
+  .draft-block .subject .lbl { color: var(--muted); font-size: 11px; text-transform: uppercase; margin-right: 6px; font-weight: 500; }
+  .draft-block .body {
+    white-space: pre-wrap; font-size: 13.5px; line-height: 1.55; color: #dce5ee;
+    border-left: 2px solid var(--accent); padding-left: 10px; margin: 8px 0;
+  }
+  .draft-block .tp-list {
+    margin: 8px 0 0; padding: 0; list-style: none;
+  }
+  .draft-block .tp-list li {
+    padding: 4px 0 4px 18px; font-size: 13px; color: #cfd6e3; position: relative;
+  }
+  .draft-block .tp-list li::before {
+    content: "→"; position: absolute; left: 0; color: var(--accent);
+  }
+  .card-actions {
+    display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .card-actions button { padding: 8px 12px; font-size: 12.5px; }
+  .card-actions .done-tag {
+    display: inline-flex; align-items: center;
+    color: var(--green); font-size: 12px; padding: 6px 10px;
+  }
+  .empty-briefing {
+    text-align: center; padding: 30px; color: var(--muted);
+    background: var(--panel); border: 1px dashed var(--line); border-radius: 10px;
+    margin: 14px 0;
+  }
+
+  /* CRM tab */
+  .crm-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 14px; margin-top: 14px; }
+  @media (max-width: 1000px) { .crm-layout { grid-template-columns: 1fr; } }
+  .client-list { max-height: 600px; overflow-y: auto; }
+  .client-row {
+    background: #0e131a; border: 1px solid var(--line); border-radius: 7px;
+    padding: 12px 14px; margin-bottom: 8px; cursor: pointer; transition: border-color .15s;
+  }
+  .client-row:hover { border-color: var(--accent); }
+  .client-row.active { border-color: var(--accent); background: rgba(79,156,255,.10); }
+  .client-row .name { font-weight: 700; font-size: 15px; }
+  .client-row .meta { color: var(--muted); font-size: 12px; margin-top: 3px; }
+  .client-row .stats { display: flex; gap: 12px; margin-top: 6px; font-size: 11.5px; color: var(--blue); }
+  .crm-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .crm-form-grid { grid-template-columns: 1fr; } }
+  .crm-form-grid label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
+  .crm-form-grid input, .crm-form-grid select, .crm-form-grid textarea {
+    width: 100%; padding: 8px 10px; font-size: 13px; font-weight: 500;
+    letter-spacing: normal; text-transform: none;
+    background: #090d12; color: var(--text); border: 1px solid var(--line); border-radius: 6px;
+  }
+  .crm-form-grid textarea { min-height: 60px; resize: vertical; }
+  .crm-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .holding-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; align-items: center;
+  }
+  .holding-row.head { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+  .add-holding-row { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 8px; margin-top: 10px; }
+  .add-holding-row input { width: 100%; padding: 7px 9px; font-size: 13px; font-weight: 500; letter-spacing: normal; text-transform: none; }
+  .who-holds { background: #0e131a; border: 1px solid var(--line); border-radius: 7px; padding: 12px; margin-top: 10px; }
+  .who-holds .lbl { color: var(--muted); font-size: 11px; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* News tab */
+  .news-item {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 10px;
+  }
+  .news-item a { color: var(--text); text-decoration: none; }
+  .news-item a:hover .title { color: var(--accent); }
+  .news-item .title { font-size: 15px; font-weight: 600; line-height: 1.35; }
+  .news-item .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .news-item .summary { color: #cfd6e3; font-size: 13px; margin-top: 6px; line-height: 1.5; }
+  .news-item .badge-new {
+    display: inline-block; background: rgba(57,181,106,.16); border: 1px solid var(--green);
+    color: var(--green); padding: 2px 7px; border-radius: 999px; font-size: 10.5px;
+    margin-right: 6px; font-weight: 600;
+  }
+
+  /* Memo tab */
+  .memo-card {
+    background: #0e131a;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+    margin-top: 12px;
+  }
+  .memo-card .preview-line { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+  .memo-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .memo-fields label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; margin-bottom: 5px; }
+  .memo-fields input { width: 100%; padding: 9px 11px; font-size: 14px; font-weight: 500; letter-spacing: normal; text-transform: none; }
+  .branding-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; padding: 10px 12px; background: #090d12; border-radius: 6px; margin-top: 10px; }
+  .branding-row .lbl { color: var(--muted); }
+
+  /* Alerts banner + watchlist UI additions */
+  .alerts-banner {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(214,165,56,.10);
+    border: 1px solid var(--yellow);
+    border-radius: 8px;
+    color: #f4d38b;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .alerts-banner .ab-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .alerts-banner button { padding: 6px 10px; font-size: 12px; }
+  #alertsCount { display: inline-block; min-width: 16px; text-align: center; }
+  #alertsCount.has-alerts { color: var(--yellow); font-weight: 700; }
+
+  .wl-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; margin-top: 14px; }
+  @media (max-width: 1000px) { .wl-grid { grid-template-columns: 1fr; } }
+  .wl-form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 8px 0; }
+  .wl-form-row input { width: 100%; padding: 8px 10px; font-size: 13px; font-weight: 500; letter-spacing: normal; text-transform: none; }
+  .wl-form-row label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
+  .wl-form-row .checkbox { display: flex; align-items: center; gap: 8px; padding-top: 18px; }
+  .wl-table { font-size: 13px; }
+  .wl-table .actions { white-space: nowrap; }
+  .wl-table .change.up { color: var(--green); }
+  .wl-table .change.down { color: var(--red); }
+  .wl-rules-list { font-size: 11.5px; color: var(--muted); font-family: "SF Mono", Monaco, monospace; }
+  .wl-empty { padding: 20px; color: var(--muted); text-align: center; font-size: 13px; }
+
+  /* Macro / spreads */
+  .macro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+  @media (max-width: 800px) { .macro-grid { grid-template-columns: repeat(2, 1fr); } }
+  .macro-cell { background: #0e131a; border: 1px solid var(--line); border-radius: 7px; padding: 11px; }
+  .macro-cell .lbl { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+  .macro-cell .val { font-size: 17px; font-weight: 700; margin-top: 4px; font-family: "SF Mono", Monaco, monospace; }
+  .spread-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+  .spread-row:last-child { border-bottom: 0; }
+  .spread-row .num { font-family: "SF Mono", Monaco, monospace; font-weight: 600; }
+  .spread-row .bps.good { color: var(--green); }
+  .spread-row .bps.bad { color: var(--red); }
+  .spread-row .interp { color: var(--muted); font-size: 12px; grid-column: span 4; padding-top: 4px; }
+
+  /* Tax tags */
+  .tag-pill {
+    display: inline-flex; padding: 4px 10px; border-radius: 999px;
+    background: var(--panel2); border: 1px solid var(--accent);
+    color: var(--blue); font-size: 12px; margin: 4px 6px 0 0; font-weight: 600;
+  }
+  .tag-pill.warn { color: #f4d38b; border-color: var(--yellow); background: rgba(214,165,56,.10); }
+  .tag-pill.neutral { color: var(--muted); border-color: var(--line); background: transparent; }
+
+  /* Events */
+  .event-row { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: center; }
+  .event-row:last-child { border-bottom: 0; }
+  .event-row .when { color: var(--muted); font-size: 12px; }
+  .event-row .badge { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .event-row .badge.soon { background: rgba(239,91,91,.18); color: var(--red); border: 1px solid var(--red); }
+  .event-row .badge.upcoming { background: rgba(214,165,56,.16); color: var(--yellow); border: 1px solid var(--yellow); }
+  .event-row .badge.distant { background: var(--panel2); color: var(--muted); border: 1px solid var(--line); }
+
+  /* Income */
+  .income-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0 14px; }
+  .income-controls label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
+  .income-controls input { width: 100%; padding: 8px 10px; font-size: 14px; font-weight: 600; letter-spacing: normal; text-transform: none; }
+  .income-totals { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+  .income-totals .total-cell { background: #0e131a; border: 1px solid var(--line); border-radius: 7px; padding: 14px; }
+  .income-totals .lbl { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+  .income-totals .val { font-size: 24px; font-weight: 800; margin-top: 4px; color: var(--green); font-family: "SF Mono", Monaco, monospace; }
+  .assumptions { font-size: 11.5px; color: var(--muted); padding: 10px 12px; background: #0e131a; border-radius: 7px; border: 1px solid var(--line); margin-bottom: 12px; }
+
+  /* Notes */
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 900px) { .notes-grid { grid-template-columns: 1fr; } }
+  .notes-grid textarea {
+    width: 100%; min-height: 180px;
+    background: #090d12; color: var(--text);
+    border: 1px solid var(--line); border-radius: 6px;
+    padding: 12px; font-size: 13px; line-height: 1.5;
+    font-family: inherit; resize: vertical;
+  }
+  .notes-grid textarea:focus { outline: none; border-color: var(--accent); }
+  .notes-meta { color: var(--muted); font-size: 11.5px; margin-top: 6px; }
+
   @media (max-width: 1050px) {
     header, .hero, .models, .grid2, .insights { grid-template-columns: 1fr; }
     .metric-grid { grid-template-columns: repeat(2, 1fr); }
@@ -248,8 +548,12 @@
     <form class="search" id="searchForm">
       <input id="ticker" placeholder="NVDA" autocomplete="off" />
       <button id="runBtn" type="submit">Evaluate</button>
+      <button id="watchlistBtn" type="button" class="secondary" title="Open watchlist">★ Watchlist</button>
+      <button id="alertsBtn" type="button" class="secondary" title="Recent alerts">🔔 <span id="alertsCount">0</span></button>
     </form>
   </header>
+
+  <div id="alertsBanner" class="alerts-banner" style="display:none;"></div>
 
   <div class="notice" id="serverNotice">
     This page needs the local evaluator server to fetch real market data. Double-click
@@ -288,20 +592,42 @@
     </section>
 
     <div class="tabs" role="tablist">
-      <button class="tab active" data-view="models">Model Scores</button>
+      <button class="tab active" data-view="briefing">★ Morning Briefing</button>
+      <button class="tab" data-view="models">Model Scores</button>
       <button class="tab" data-view="valuations">Valuations</button>
       <button class="tab" data-view="dcf">DCF</button>
       <button class="tab" data-view="peers">Peers & Averages</button>
       <button class="tab" data-view="predictor">Predictor Status</button>
       <button class="tab" data-view="track">Track Record</button>
+      <button class="tab" data-view="watchlist">Watchlist</button>
+      <button class="tab" data-view="macro">Macro</button>
+      <button class="tab" data-view="events">Events</button>
+      <button class="tab" data-view="income">Income</button>
+      <button class="tab" data-view="notes">Notes</button>
+      <button class="tab" data-view="tax">Tax</button>
+      <button class="tab" data-view="portfolio">Portfolio Fit</button>
+      <button class="tab" data-view="memo">Client Memo</button>
+      <button class="tab" data-view="clients">Clients</button>
+      <button class="tab" data-view="news">News</button>
     </div>
 
-    <section class="view active" id="models"></section>
+    <section class="view active" id="briefing"></section>
+    <section class="view" id="models"></section>
     <section class="view" id="valuations"></section>
     <section class="view" id="dcf"></section>
     <section class="view" id="peers"></section>
     <section class="view" id="predictor"></section>
     <section class="view" id="track"></section>
+    <section class="view" id="watchlist"></section>
+    <section class="view" id="macro"></section>
+    <section class="view" id="events"></section>
+    <section class="view" id="income"></section>
+    <section class="view" id="notes"></section>
+    <section class="view" id="tax"></section>
+    <section class="view" id="portfolio"></section>
+    <section class="view" id="memo"></section>
+    <section class="view" id="clients"></section>
+    <section class="view" id="news"></section>
 
     <section class="insights">
       <div class="panel">
@@ -348,6 +674,31 @@ function tier(score, max = 10) {
   if (pct >= .8) return ["good", "Strong"];
   if (pct >= .5) return ["ok", "Moderate"];
   return ["bad", "Weak"];
+}
+
+// Plain-English descriptions for every tab.
+const TAB_DESCRIPTIONS = {
+  briefing:   "<strong>Your AI Advisor Co-Pilot.</strong> Every time you open the app, this scans your CRM, holdings, market activity, and news to surface prioritized actions: tax-loss opportunities, portfolio score changes, and clients overdue for a touchpoint. Each item comes with a draft email and talking points. <span class='what-look'>Review, edit, send. Spend your time on the moments that actually matter.</span>",
+  models:     "<strong>Three scorecards, 0–10 each.</strong> Higher = stronger fit for that investing style. The BUY / HOLD / PASS verdict at the top is the sum across all three. <span class='what-look'>What to look at: which model wins, and which metrics inside it scored 2 vs 0.</span>",
+  valuations: "<strong>Different methods of estimating what one share is actually worth.</strong> None of these is the truth — each method has known weaknesses. <span class='what-look'>What to look at: the spread. If three out of four methods say expensive, that's a signal.</span>",
+  dcf:        "<strong>Estimates what the stock is worth today based on the cash it will produce.</strong> You enter the growth and discount-rate assumptions; the math runs from there. <span class='what-look'>Garbage in, garbage out — calibrate the inputs to your view, not last quarter's hype.</span>",
+  peers:      "<strong>How this stock compares to its closest industry rivals plus the sector ETF and S&P 500.</strong> Helps catch \"expensive only versus the wrong benchmark\" situations. <span class='what-look'>What to look at: P/E and FCF yield versus the peer average row.</span>",
+  predictor:  "<strong>Honest historical context, not a forecast.</strong> Once real calibration data is loaded, this tab tells you what stocks scoring like this historically returned over the next 12 months. <span class='what-look'>Currently disabled — no fake numbers shown.</span>",
+  track:      "<strong>Every stock you've evaluated, saved locally.</strong> The app checks where each one went after your call so you build a real, honest track record over time. <span class='what-look'>What to look at: BUY calls that worked vs PASS calls that worked — your hit rate per direction.</span>",
+  watchlist:  "<strong>Tickers you want the app to monitor, with alert rules you set.</strong> Daily move %, weekly move %, price targets, 52-week high/low touch, score changes. Checked on every page load and on demand. <span class='what-look'>What to look at: the 🔔 icon at top right shows unacknowledged alerts.</span>",
+  macro:      "<strong>What's happening in the wider market right now.</strong> The 10-year Treasury is the big one — your stock has to clear it to justify equity risk. <span class='what-look'>What to look at: the spread rows. Negative spread = the bond market pays you more for less risk.</span>",
+  events:     "<strong>Calendar of things that move stocks.</strong> Next earnings, ex-dividend date, dividend payment date. <span class='what-look'>What to look at: red badges = within 7 days, plan client conversations around them.</span>",
+  income:     "<strong>If you put $X into this stock today, how much income would it throw off over 5 years?</strong> Shown two ways: collect dividends as cash, or reinvest them to grow the position (DRIP). <span class='what-look'>Edit the position size and growth-rate override to fit the client conversation.</span>",
+  notes:      "<strong>Your private research notes and meeting prep, saved per ticker.</strong> Survives between sessions. <span class='what-look'>Use the right column for talking points before the next client review.</span>",
+  tax:        "<strong>Tax-classification flags that materially change client outcomes.</strong> REIT = ordinary income, MLP = K-1 forms, ADR = foreign withholding. <span class='what-look'>What to look at: the tag pills under the company name. Steer holdings to the right account type accordingly.</span>",
+  portfolio:  "<strong>Paste an existing client's holdings as CSV.</strong> The app shows whether this stock is correlated with what they already own, whether it'd push them over your sector caps, and what starter position size makes sense for their portfolio. <span class='what-look'>Format: <code>ticker,shares</code> or <code>ticker,weight</code> with a header row.</span>",
+  memo:       "<strong>Generates a clean 2-page PDF you can drop into the client file.</strong> Plain-language recommendation, key risks, suitability checkboxes, and disclosures. <span class='what-look'>Firm and advisor name come from <code>firm_branding.json</code> — edit that file to put your real branding on it.</span>",
+  clients:    "<strong>Your client roster.</strong> Add a client once with their risk tolerance, AUM, tax bracket, and holdings. Then tag any evaluation to them so you can see \"everything I've recommended for the Smith Trust\" or \"which of my clients hold this ticker.\" <span class='what-look'>Click a client to see their detail page with holdings and tagged evaluations.</span>",
+  news:       "<strong>Recent news headlines for the loaded ticker.</strong> Pulled live from Yahoo Finance. <span class='what-look'>Use this to catch catalysts before client conversations — anything in the last 48 hours is usually material.</span>",
+};
+function tabIntro(view) {
+  const d = TAB_DESCRIPTIONS[view] || "";
+  return `<div class="tab-intro">${d}</div>`;
 }
 
 function setLoading(on) {
@@ -405,6 +756,18 @@ function render(payload) {
   renderTrack(payload);
   renderInsights(payload);
   renderPriceChart(payload.chart, currentChartRange);
+  renderTaxTagsPills(payload);
+  renderMacro(payload);
+  renderEvents(payload);
+  renderIncome(payload);
+  renderNotes(payload);
+  renderTax(payload);
+  renderPortfolio(payload);
+  renderMemo(payload);
+  renderNews(payload);
+  renderClients(payload);
+  // Refresh watchlist view so "Already on your watchlist" badge updates
+  refreshWatchlistView();
 }
 
 function renderTopMetrics(data) {
@@ -441,7 +804,7 @@ function renderModels(payload) {
       <table><thead><tr><th>Metric</th><th class="num">Value</th><th class="num">Pts</th></tr></thead><tbody>${rows}</tbody></table>
     </div>`;
   }).join("");
-  document.getElementById("models").innerHTML = `<div class="models">${cards}</div>`;
+  document.getElementById("models").innerHTML = tabIntro("models") + `<div class="models">${cards}</div>`;
   renderScoreChart(payload);
 }
 
@@ -452,7 +815,7 @@ function renderValuations(payload) {
     const up = v.upside === null || v.upside === undefined ? "—" : fmt.pct(v.upside);
     return `<tr><td>${v.name}<div class="muted">${v.method}</div></td><td class="num">${val}</td><td class="num">${up}</td></tr>`;
   }).join("");
-  document.getElementById("valuations").innerHTML = `<div class="grid2">
+  document.getElementById("valuations").innerHTML = tabIntro("valuations") + `<div class="grid2">
     <div class="panel">
       <h3>Valuation Methods</h3>
       <div class="tagline">Simple models, each with different weaknesses. Use the spread, not one magic number.</div>
@@ -471,7 +834,7 @@ function renderValuations(payload) {
 function renderDCF(payload) {
   const dcf = payload.dcf || {};
   const canRun = dcf.freeCashflow && dcf.sharesOutstanding;
-  document.getElementById("dcf").innerHTML = `<div class="grid2">
+  document.getElementById("dcf").innerHTML = tabIntro("dcf") + `<div class="grid2">
     <div class="panel">
       <h3>Discounted Cash Flow</h3>
       <div class="tagline">Base inputs are fetched. Forecast rates are assumptions you enter, so the app does not invent a DCF.</div>
@@ -588,7 +951,7 @@ function renderPeers(payload) {
     </tr>`;
   }).join("");
   const avg = payload.peers.averages;
-  document.getElementById("peers").innerHTML = `<div class="grid2">
+  document.getElementById("peers").innerHTML = tabIntro("peers") + `<div class="grid2">
     <div class="panel">
       <h3>Competitor Comparison</h3>
       <div class="tagline">Peers are inferred from industry where possible, then sector ETF and SPY are added as benchmarks.</div>
@@ -612,7 +975,7 @@ function renderPredictor(payload) {
   const p = payload.predictor;
   const band = p.band_stats || {};
   const model = p.model_stats || {};
-  document.getElementById("predictor").innerHTML = `<div class="grid2">
+  document.getElementById("predictor").innerHTML = tabIntro("predictor") + `<div class="grid2">
     <div class="panel">
       <h3>Predictor Status</h3>
       <div class="tagline">No predictions are shown unless backed by real historical calibration data.</div>
@@ -638,7 +1001,7 @@ function renderTrack(payload) {
     <td class="num">${r.return_pct === null || r.return_pct === undefined ? "pending" : fmt.pct(r.return_pct)}</td>
     <td class="num">${r.days_after ?? "—"}</td>
   </tr>`).join("");
-  document.getElementById("track").innerHTML = `<div class="panel">
+  document.getElementById("track").innerHTML = tabIntro("track") + `<div class="panel">
     <h3>Learning Log</h3>
     <div class="tagline">Every evaluation is saved locally. Later runs compare the call price to current price.</div>
     <table><thead><tr><th>Date</th><th>Ticker</th><th>Call</th><th>Best Model</th><th class="num">Eval Price</th><th class="num">Return</th><th class="num">Days</th></tr></thead><tbody>${rows || `<tr><td colspan="7" class="muted">No evaluations logged yet.</td></tr>`}</tbody></table>
@@ -715,6 +1078,1177 @@ function renderScoreChart(payload) {
     options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 10, ticks: { color: "#9aa7b4" }, grid: { color: "#293241" }, angleLines: { color: "#293241" }, pointLabels: { color: "#edf2f7" } } }, plugins: { legend: { display: false } } }
   });
 }
+
+// =====================================================================
+//  NEW FEATURES: Watchlist & Alerts, Macro, Events, Income, Notes, Tax
+// =====================================================================
+
+const API_BASE = `${location.protocol === 'file:' ? 'http://127.0.0.1:8765' : location.origin}`;
+
+async function apiGet(path) {
+  const r = await fetch(API_BASE + path);
+  if (!r.ok) throw new Error(`API ${path}: ${r.status}`);
+  return r.json();
+}
+async function apiPost(path, body) {
+  const r = await fetch(API_BASE + path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body || {})
+  });
+  if (!r.ok) throw new Error(`API ${path}: ${r.status}`);
+  return r.json();
+}
+
+// ---------- Tax tags as pills under company name ----------
+function renderTaxTagsPills(payload) {
+  const tags = (payload.taxTags && payload.taxTags.tags) || [];
+  const host = document.getElementById("companyMeta");
+  if (!host) return;
+  // Append pills inline below the existing meta line
+  const pillBar = document.createElement("div");
+  pillBar.style.marginTop = "6px";
+  tags.forEach(t => {
+    const cls = (t.includes("REIT") || t.includes("MLP") || t.includes("ADR")) ? "warn"
+              : (t === "No Dividend" ? "neutral" : "");
+    pillBar.innerHTML += `<span class="tag-pill ${cls}">${t}</span>`;
+  });
+  // Replace any previous pill bar
+  const old = host.querySelector(".tag-pill-bar");
+  if (old) old.remove();
+  pillBar.className = "tag-pill-bar";
+  host.appendChild(pillBar);
+}
+
+// ---------- Macro tab ----------
+function renderMacro(payload) {
+  const macro = payload.macroContext || { snapshot: {}, comparisons: [] };
+  const snap = macro.snapshot || {};
+  const cells = Object.entries(snap).map(([key, m]) => `
+    <div class="macro-cell">
+      <div class="lbl">${m.label}</div>
+      <div class="val">${m.value !== null && m.value !== undefined ? Number(m.value).toFixed(2) + (m.unit || '') : "n/a"}</div>
+    </div>
+  `).join("");
+  const spreads = (macro.comparisons || []).map(c => {
+    const bps = c.spread_bps;
+    const cls = bps > 200 ? "good" : (bps < 0 ? "bad" : "");
+    return `
+      <div class="spread-row">
+        <div><strong>${c.name}</strong></div>
+        <div class="num">Stock: ${Number(c.stock_value).toFixed(2)}%</div>
+        <div class="num">10Y: ${Number(c.benchmark_value).toFixed(2)}%</div>
+        <div class="num bps ${cls}">${bps >= 0 ? "+" : ""}${bps} bps</div>
+        <div class="interp">${c.interpretation}</div>
+      </div>
+    `;
+  }).join("");
+  document.getElementById("macro").innerHTML = tabIntro("macro") + `
+    <div class="panel">
+      <h3>Macro Snapshot</h3>
+      <div class="tagline">Live yields and benchmarks from Yahoo Finance</div>
+      <div class="macro-grid">${cells}</div>
+      <h3 style="margin-top:20px;">Stock vs 10-Year Treasury Spreads</h3>
+      <div class="tagline">How much premium you're being paid for taking equity risk on ${payload.data.ticker}</div>
+      ${spreads || '<div class="muted" style="padding:14px 0;">FCF yield / dividend yield not available for spread comparison.</div>'}
+    </div>
+  `;
+}
+
+// ---------- Events tab ----------
+function renderEvents(payload) {
+  const e = payload.events || {};
+  if (e.error) {
+    document.getElementById("events").innerHTML = `<div class="panel"><h3>Calendar</h3><div class="error show">Events fetch failed: ${e.error}</div></div>`;
+    return;
+  }
+  function badgeFor(days) {
+    if (days === null || days === undefined) return '<span class="badge distant">unknown</span>';
+    if (days < 0) return `<span class="badge distant">${Math.abs(days)}d ago</span>`;
+    if (days <= 7) return `<span class="badge soon">in ${days} days</span>`;
+    if (days <= 30) return `<span class="badge upcoming">in ${days} days</span>`;
+    return `<span class="badge distant">in ${days} days</span>`;
+  }
+  const rows = [
+    { name: "Next earnings", date: e.next_earnings, days: e.earnings_days_away },
+    { name: "Ex-dividend date", date: e.ex_dividend_date, days: e.ex_dividend_days_away },
+    { name: "Dividend payment date", date: e.dividend_payment_date, days: e.dividend_payment_days_away },
+    { name: "Last reported earnings", date: e.last_earnings, days: e.last_earnings ? Math.floor((new Date(e.last_earnings) - new Date()) / 86400000) : null }
+  ];
+  document.getElementById("events").innerHTML = tabIntro("events") + `
+    <div class="panel">
+      <h3>Calendar & Catalysts</h3>
+      <div class="tagline">Pulled live for ${payload.data.ticker} from Yahoo Finance. Plan client conversations around these.</div>
+      ${rows.map(r => `
+        <div class="event-row">
+          <div>
+            <div><strong>${r.name}</strong></div>
+            <div class="when">${r.date || "n/a"}</div>
+          </div>
+          <div></div>
+          <div>${r.date ? badgeFor(r.days) : '<span class="badge distant">n/a</span>'}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+// ---------- Income projection tab ----------
+async function renderIncome(payload) {
+  const ticker = payload.data.ticker;
+  const proj = payload.incomeProjection || { available: false, reason: "—" };
+
+  function table(rows, isDrip) {
+    const headers = isDrip
+      ? `<tr><th>Year</th><th>Div/Share</th><th>Income</th><th>Shares</th><th>Position Value</th></tr>`
+      : `<tr><th>Year</th><th>Div/Share</th><th>Income</th><th>Cumulative</th></tr>`;
+    const body = rows.map(r => isDrip
+      ? `<tr><td>Year ${r.year}</td><td class="num">$${r.annual_dividend_per_share.toFixed(4)}</td><td class="num">$${r.income.toFixed(2)}</td><td class="num">${r.shares.toFixed(2)}</td><td class="num">$${r.position_value.toFixed(2)}</td></tr>`
+      : `<tr><td>Year ${r.year}</td><td class="num">$${r.annual_dividend_per_share.toFixed(4)}</td><td class="num">$${r.income.toFixed(2)}</td><td class="num">$${r.cumulative_income.toFixed(2)}</td></tr>`
+    ).join("");
+    return `<table>${headers}${body}</table>`;
+  }
+
+  function renderBody(p) {
+    if (!p.available) {
+      return `<div class="muted" style="padding:14px 0;">${p.reason || "Projection unavailable."}</div>`;
+    }
+    const a = p.assumptions;
+    return `
+      <div class="assumptions">
+        <strong>Assumptions:</strong>
+        position $${a.position_value_today.toLocaleString()} at $${a.current_price}/share = ${a.starting_shares.toFixed(2)} shares ·
+        annual div/share today $${a.annual_dividend_per_share_today.toFixed(4)} ·
+        yield ${a.current_yield_pct ?? "n/a"}% ·
+        dividend growth used ${a.dividend_growth_rate_pct_used}% (${a.growth_source}).
+      </div>
+      <div class="income-totals">
+        <div class="total-cell"><div class="lbl">5-yr cash income (no DRIP)</div><div class="val">$${p.cash_only.total_income.toLocaleString()}</div></div>
+        <div class="total-cell"><div class="lbl">5-yr DRIP ending position value</div><div class="val">$${p.drip.ending_position_value.toLocaleString()}</div></div>
+      </div>
+      <div class="grid2">
+        <div><h3>Cash collection</h3>${table(p.cash_only.rows, false)}</div>
+        <div><h3>Full DRIP (reinvest dividends)</h3>${table(p.drip.rows, true)}</div>
+      </div>
+    `;
+  }
+
+  document.getElementById("income").innerHTML = tabIntro("income") + `
+    <div class="panel">
+      <h3>Dividend Income Projection</h3>
+      <div class="tagline">Honest 5-year projection using ${ticker}'s real annual dividend and trailing 5Y CAGR. Adjust below.</div>
+      <div class="income-controls">
+        <div>
+          <label>Position value ($)</label>
+          <input id="incPos" type="number" value="100000" step="10000" />
+        </div>
+        <div>
+          <label>Growth override (%, optional)</label>
+          <input id="incGrowth" type="number" placeholder="(use historical)" step="0.5" />
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button type="button" onclick="recalcIncome()">Recalculate</button>
+        </div>
+      </div>
+      <div id="incomeBody">${renderBody(proj)}</div>
+    </div>
+  `;
+}
+
+async function recalcIncome() {
+  if (!currentPayload) return;
+  const ticker = currentPayload.data.ticker;
+  const pos = document.getElementById("incPos").value;
+  const g = document.getElementById("incGrowth").value;
+  const qs = new URLSearchParams({ ticker, position: pos });
+  if (g) qs.set("growth", g);
+  try {
+    const res = await apiGet("/api/income?" + qs.toString());
+    if (res.ok) {
+      currentPayload.incomeProjection = res.projection;
+      renderIncome(currentPayload);
+    }
+  } catch (e) {
+    document.getElementById("incomeBody").innerHTML = `<div class="error show">Recalc failed: ${e.message}</div>`;
+  }
+}
+
+// ---------- Notes tab ----------
+function renderNotes(payload) {
+  const n = payload.notes || { research_notes: "", meeting_talking_points: "", updated_at: null };
+  document.getElementById("notes").innerHTML = tabIntro("notes") + `
+    <div class="panel">
+      <h3>Research Notes & Meeting Prep — ${payload.data.ticker}</h3>
+      <div class="tagline">Saved locally per ticker. Last saved: ${n.updated_at ? new Date(n.updated_at).toLocaleString() : "never"}</div>
+      <div class="notes-grid" style="margin-top:14px;">
+        <div>
+          <label class="muted" style="font-size:12px;">Research notes</label>
+          <textarea id="researchNotes" placeholder="Investment thesis, recent news worth tracking, controversial assumptions, model overrides...">${escapeHtml(n.research_notes || "")}</textarea>
+        </div>
+        <div>
+          <label class="muted" style="font-size:12px;">Talking points for next meeting</label>
+          <textarea id="meetingNotes" placeholder="What to discuss with the client. Score change since last review, tax considerations, position-size thoughts...">${escapeHtml(n.meeting_talking_points || "")}</textarea>
+        </div>
+      </div>
+      <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+        <button type="button" onclick="saveNotes()">Save notes</button>
+        <span class="notes-meta" id="notesStatus"></span>
+      </div>
+    </div>
+  `;
+}
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+async function saveNotes() {
+  if (!currentPayload) return;
+  const ticker = currentPayload.data.ticker;
+  const research_notes = document.getElementById("researchNotes").value;
+  const meeting_talking_points = document.getElementById("meetingNotes").value;
+  document.getElementById("notesStatus").textContent = "Saving…";
+  try {
+    const res = await apiPost("/api/notes", { ticker, research_notes, meeting_talking_points });
+    if (res.ok) {
+      currentPayload.notes = res.notes;
+      document.getElementById("notesStatus").textContent = "Saved at " + new Date().toLocaleTimeString();
+    } else {
+      document.getElementById("notesStatus").textContent = "Save failed: " + (res.error || "unknown");
+    }
+  } catch (e) {
+    document.getElementById("notesStatus").textContent = "Save failed: " + e.message;
+  }
+}
+
+// ---------- Tax tab (detailed) ----------
+function renderTax(payload) {
+  const t = payload.taxTags || { tags: [], notes: [] };
+  const pills = t.tags.map(tag => {
+    const cls = (tag.includes("REIT") || tag.includes("MLP") || tag.includes("ADR")) ? "warn"
+              : (tag === "No Dividend" ? "neutral" : "");
+    return `<span class="tag-pill ${cls}">${tag}</span>`;
+  }).join(" ");
+  document.getElementById("tax").innerHTML = tabIntro("tax") + `
+    <div class="panel">
+      <h3>Tax Treatment — ${payload.data.ticker}</h3>
+      <div class="tagline">Surface-level classification only. Not tax advice. Confirm against the firm's tax engine for client work.</div>
+      <div style="margin:14px 0;">${pills || '<span class="muted">No tags applied.</span>'}</div>
+      <ul style="margin-top:12px;">
+        ${t.notes.map(n => `<li>${n}</li>`).join("")}
+      </ul>
+    </div>
+  `;
+}
+
+// ---------- Portfolio Fit tab ----------
+function renderPortfolio(payload) {
+  const ticker = payload.data.ticker;
+  document.getElementById("portfolio").innerHTML = tabIntro("portfolio") + `
+    <div class="panel">
+      <h3>Portfolio Fit Check — ${ticker}</h3>
+      <div class="pf-upload">
+        <div class="muted" style="font-size:12px;margin-bottom:8px;">
+          Paste a CSV of the client's existing holdings. First row must be a header.
+          Use <code>ticker,shares</code> or <code>ticker,weight</code> (weights can be <code>0.05</code> or <code>5</code>).
+        </div>
+        <textarea id="pfCsv" placeholder="ticker,shares
+AAPL,200
+JNJ,150
+KO,300
+XOM,100"></textarea>
+        <div class="pf-controls">
+          <div>
+            <label class="muted" style="font-size:11px;text-transform:uppercase;display:block;margin-bottom:4px;">Portfolio value $ (used when CSV gives weights)</label>
+            <input id="pfPv" type="number" value="500000" step="10000" />
+          </div>
+          <div style="align-self:flex-end;">
+            <button type="button" onclick="runFitCheck()">Run Fit Check</button>
+          </div>
+        </div>
+      </div>
+      <div id="pfResult"></div>
+    </div>
+  `;
+}
+
+async function runFitCheck() {
+  if (!currentPayload) return;
+  const ticker = currentPayload.data.ticker;
+  const csv = document.getElementById("pfCsv").value;
+  const pv  = parseFloat(document.getElementById("pfPv").value) || null;
+  const resBox = document.getElementById("pfResult");
+  resBox.innerHTML = '<div class="loader show">Pulling history and correlations for each holding...</div>';
+  try {
+    const res = await apiPost("/api/portfolio/check", { ticker, csv, portfolio_value: pv });
+    if (!res.ok) {
+      resBox.innerHTML = `<div class="error show">${res.error || "Fit check failed."}</div>`;
+      return;
+    }
+    renderFitResult(res);
+  } catch (e) {
+    resBox.innerHTML = `<div class="error show">${e.message}</div>`;
+  }
+}
+
+function renderFitResult(r) {
+  const warnHtml = (r.warnings || []).map(w => `<div class="pf-warn">⚠ ${w}</div>`).join("");
+  const corrRow = (c) => {
+    if (c === null || c === undefined) return '<span class="muted">n/a</span>';
+    const cls = c >= 0.75 ? "high" : (c >= 0.5 ? "med" : "low");
+    return `<span class="corr-cell ${cls}">${c.toFixed(2)}</span>`;
+  };
+  const holdingsTbl = `
+    <table>
+      <thead><tr><th>Ticker</th><th>Sector</th><th class="num">Weight</th><th class="num">Value</th><th class="num">Corr to ${r.candidate.ticker}</th></tr></thead>
+      <tbody>
+        ${r.portfolio.holdings.map(h => `
+          <tr>
+            <td><strong>${h.ticker}</strong></td>
+            <td class="muted">${h.sector}</td>
+            <td class="num">${(h.weight * 100).toFixed(1)}%</td>
+            <td class="num">$${h.value.toLocaleString(undefined, {maximumFractionDigits:0})}</td>
+            <td class="num">${corrRow(h.correlation_to_candidate)}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  const sectorTbl = (() => {
+    const allSectors = Array.from(new Set([
+      ...Object.keys(r.sector_concentration.current_pct),
+      ...Object.keys(r.sector_concentration.projected_pct),
+    ])).sort();
+    return `<table>
+      <thead><tr><th>Sector</th><th class="num">Current %</th><th class="num">If Added</th></tr></thead>
+      <tbody>
+        ${allSectors.map(s => {
+          const cur = r.sector_concentration.current_pct[s] || 0;
+          const proj = r.sector_concentration.projected_pct[s] || 0;
+          const cls = (proj > r.sector_concentration.caps_used.hard_cap_pct) ? "pt bad" :
+                      (proj > r.sector_concentration.caps_used.soft_cap_pct) ? "pt ok" : "pt good";
+          return `<tr><td>${s}</td><td class="num">${cur.toFixed(1)}%</td><td class="num ${cls}">${proj.toFixed(1)}%</td></tr>`;
+        }).join("")}
+      </tbody>
+    </table>`;
+  })();
+
+  const sp = r.suggested_position;
+  document.getElementById("pfResult").innerHTML = `
+    ${warnHtml}
+    <div class="pf-result-grid">
+      <div>
+        <h3 style="margin-top:14px;">Holdings & Correlations</h3>
+        ${holdingsTbl}
+        <h3 style="margin-top:14px;">Sector Concentration</h3>
+        ${sectorTbl}
+        <div class="muted" style="font-size:11.5px;margin-top:6px;">
+          Caps used (advisory only): soft ${r.sector_concentration.caps_used.soft_cap_pct}%, hard ${r.sector_concentration.caps_used.hard_cap_pct}%.
+        </div>
+      </div>
+      <div>
+        <div class="pf-suggested">
+          <div class="muted" style="font-size:11px;text-transform:uppercase;">Suggested starter position</div>
+          <div class="big">${sp.weight_pct}%</div>
+          <div style="font-size:18px;font-weight:700;color:#dce5ee;">≈ $${sp.dollar_amount.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+          <div class="muted" style="font-size:12.5px;margin-top:8px;line-height:1.5;">${sp.rationale}</div>
+        </div>
+        <div style="margin-top:12px;font-size:12.5px;color:var(--muted);">
+          <div><strong>Most correlated holding:</strong> ${r.correlations.max_ticker || "—"} ${r.correlations.max !== null ? `(${r.correlations.max.toFixed(2)})` : ""}</div>
+          <div style="margin-top:4px;"><strong>Portfolio value:</strong> $${r.portfolio.total_value.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+          <div style="margin-top:4px;"><strong>Candidate aggregate score:</strong> ${r.candidate.aggregate_score}/30</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ---------- Client Memo tab ----------
+async function renderMemo(payload) {
+  const ticker = payload.data.ticker;
+  let branding = {};
+  try {
+    const res = await apiGet("/api/branding");
+    if (res.ok) branding = res.branding || {};
+  } catch (e) {}
+  document.getElementById("memo").innerHTML = tabIntro("memo") + `
+    <div class="panel">
+      <h3>Client Memo — ${ticker}</h3>
+      <div class="memo-card">
+        <div><strong>What you'll get:</strong> a 2-page PDF with the recommendation, key metrics, model breakdown, upcoming catalysts, tax notes, suitability checkboxes, and disclaimer.</div>
+        <div class="memo-fields">
+          <div>
+            <label>Client name (optional, shown on memo)</label>
+            <input id="memoClient" type="text" placeholder="e.g. Smith Family Trust" />
+          </div>
+          <div style="align-self:flex-end;">
+            <button type="button" onclick="downloadMemo()">Generate & Download PDF</button>
+          </div>
+        </div>
+        <div class="muted" style="font-size:12px;">
+          First click will install <code>reportlab</code> if it isn't already (about 5 seconds, one-time).
+        </div>
+      </div>
+
+      <div class="memo-card">
+        <h4 style="margin:0 0 6px;">Firm branding on the memo</h4>
+        <div class="muted" style="font-size:12.5px;">From <code>firm_branding.json</code>. Edit that file to set your real firm info.</div>
+        <div class="branding-row">
+          <div><span class="lbl">Firm name:</span> <strong>${(branding.firm_name || "—")}</strong></div>
+          <div><span class="lbl">Tagline:</span> <strong>${(branding.firm_tagline || "—")}</strong></div>
+          <div><span class="lbl">Advisor name:</span> <strong>${(branding.advisor_name || "—")}</strong></div>
+          <div><span class="lbl">Credentials:</span> <strong>${(branding.advisor_credentials || "—")}</strong></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function downloadMemo() {
+  if (!currentPayload) return;
+  const ticker = currentPayload.data.ticker;
+  const client = encodeURIComponent(document.getElementById("memoClient").value || "");
+  try {
+    const url = `${API_BASE}/api/memo?ticker=${encodeURIComponent(ticker)}&client=${client}`;
+    // Open in a new tab so the browser handles PDF download / inline preview
+    window.open(url, "_blank");
+  } catch (e) {
+    alert("Memo generation failed: " + e.message);
+  }
+}
+
+// ---------- Morning Briefing (Advisor Co-Pilot) ----------
+let briefingData = null;
+
+async function renderBriefing(payload) {
+  const host = document.getElementById("briefing");
+  host.innerHTML = tabIntro("briefing") + `
+    <div class="briefing-header">
+      <div>
+        <h2 style="margin:0;font-size:22px;font-weight:700;">Today's Briefing</h2>
+        <div class="briefing-meta" id="briefingMeta">Loading…</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button type="button" onclick="generateBriefingNow()" id="briefingGenBtn">Generate fresh briefing</button>
+      </div>
+    </div>
+    <div id="briefingBody"><div class="loader show">Scanning your CRM, holdings, and market activity…</div></div>
+  `;
+
+  // Try cached first
+  try {
+    const res = await apiGet("/api/briefing/latest");
+    if (res.ok && res.briefing) {
+      briefingData = res.briefing;
+      paintBriefing(briefingData);
+      return;
+    }
+  } catch (e) { /* ignore */ }
+
+  // No fresh briefing — auto-generate first time
+  await generateBriefingNow();
+}
+
+async function generateBriefingNow() {
+  const btn = document.getElementById("briefingGenBtn");
+  const body = document.getElementById("briefingBody");
+  if (btn) btn.disabled = true;
+  if (body) body.innerHTML = `<div class="loader show">Generating fresh briefing — scanning CRM + holdings + markets + news. This takes 10-30 seconds…</div>`;
+  try {
+    const res = await apiPost("/api/briefing/generate", {});
+    if (res.ok && res.briefing) {
+      briefingData = res.briefing;
+      paintBriefing(briefingData);
+    } else {
+      body.innerHTML = `<div class="error show">Briefing failed: ${res.error || 'unknown'}</div>`;
+    }
+  } catch (e) {
+    body.innerHTML = `<div class="error show">${e.message}</div>`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+function paintBriefing(b) {
+  const meta = document.getElementById("briefingMeta");
+  const aiBadge = b.ai_used
+    ? `<span class="ai-badge">⚡ AI-drafted (${b.model})</span>`
+    : `<span class="ai-badge" style="background:transparent;color:var(--muted);border-color:var(--line);">Template mode</span>`;
+  meta.innerHTML = `Generated ${new Date(b.generated_at).toLocaleString()}  ${aiBadge}`;
+
+  const aiNote = b.ai_used ? '' : `
+    <div class="ai-disabled-note">
+      <strong>AI personalization is off.</strong> Drafts below are template-based. To get true personalized emails per client,
+      paste your Anthropic API key into <code>ai_config.json</code> (get one at console.anthropic.com — about $3/month at typical small-firm volume), then click "Generate fresh briefing" again.
+    </div>
+  `;
+
+  const items = b.items || [];
+  if (items.length === 0) {
+    document.getElementById("briefingBody").innerHTML = `
+      ${aiNote}
+      <div class="empty-briefing">
+        <div style="font-size:28px;margin-bottom:8px;">✨</div>
+        <div style="font-size:15px;color:#cfd6e3;font-weight:600;">No actionable items right now.</div>
+        <div style="margin-top:8px;">No tax-loss opportunities, no significant score drift, no overdue touchpoints.</div>
+        <div style="margin-top:6px;font-size:12px;">As you add more clients and tag evaluations, the briefing will surface more signals.</div>
+      </div>
+    `;
+    return;
+  }
+
+  const counts = b.counts || {};
+  const countsBlock = `
+    <div class="briefing-counts">
+      ${counts.urgent ? `<span class="badge urgent">🔥 ${counts.urgent} urgent</span>` : ''}
+      ${counts.important ? `<span class="badge important">⚠ ${counts.important} important</span>` : ''}
+      ${counts.fyi ? `<span class="badge fyi">ℹ ${counts.fyi} FYI</span>` : ''}
+    </div>
+  `;
+
+  document.getElementById("briefingBody").innerHTML = aiNote + countsBlock +
+    items.map(renderBriefingCard).join("");
+}
+
+function renderBriefingCard(item) {
+  const catTag = {
+    "tax_opportunity": ["TAX OPPORTUNITY", "tax"],
+    "portfolio_action": ["PORTFOLIO ACTION", "port"],
+    "relationship_touchpoint": ["RELATIONSHIP", "rel"],
+  }[item.category] || [item.category.toUpperCase(), ""];
+  const priIcon = {urgent: "🔥", important: "⚠", fyi: "ℹ"}[item.priority] || "•";
+  const isDone = item.status === "done" || item.status === "sent" || item.status === "dismissed";
+
+  let dataLine = "";
+  if (item.category === "tax_opportunity") {
+    const savings = item.estimated_tax_savings;
+    dataLine = `Unrealized loss: $${Math.abs(item.total_unrealized_loss).toLocaleString()} · ${item.losers.length} positions${savings ? ` · est. tax savings ~$${savings.toLocaleString()}` : ''}`;
+  } else if (item.category === "portfolio_action") {
+    dataLine = `${item.ticker} · Score ${item.baseline_aggregate} → ${item.current_aggregate} (Δ ${item.delta > 0 ? '+' : ''}${item.delta}) · $${item.current_price}`;
+  } else if (item.category === "relationship_touchpoint") {
+    const days = item.days_since_last_touchpoint;
+    dataLine = days !== null && days !== undefined ? `Last touchpoint: ${days} days ago` : 'No touchpoint recorded yet';
+    if (item.natural_hook) dataLine += ` · Hook: ${item.natural_hook.ticker} ${item.natural_hook.event} ${item.natural_hook.date}`;
+  }
+
+  const d = item.draft || {};
+  return `
+    <div class="briefing-card ${item.priority} ${isDone ? 'done' : ''}">
+      <div class="top">
+        <div>
+          <div class="who"><span class="cat-tag ${catTag[1]}">${catTag[0]}</span> ${priIcon} ${escapeHtml(item.client_name)}${item.client_household ? ' · ' + escapeHtml(item.client_household) : ''}</div>
+          <div class="headline">${escapeHtml(item.headline)}</div>
+          <div class="data-line">${escapeHtml(dataLine)}</div>
+        </div>
+      </div>
+      <div class="draft-block">
+        <div class="subject"><span class="lbl">Subject:</span>${escapeHtml(d.subject || '(no subject)')}</div>
+        <div class="body">${escapeHtml(d.email_body || '(no draft)')}</div>
+        ${(d.talking_points || []).length > 0 ? `
+          <div style="margin-top:10px;">
+            <div class="subject" style="margin-bottom:4px;">Talking points</div>
+            <ul class="tp-list">${(d.talking_points || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>
+          </div>
+        ` : ''}
+      </div>
+      <div class="card-actions">
+        ${isDone
+          ? `<span class="done-tag">✓ ${item.status}</span>
+             <button type="button" class="secondary" onclick="markBriefingItem('${item.item_key}', 'new')">Reopen</button>`
+          : `<button type="button" onclick="copyDraftToClipboard('${item.item_key}')">📋 Copy email</button>
+             <button type="button" class="secondary" onclick="markBriefingItem('${item.item_key}', 'sent')">✓ Mark sent</button>
+             <button type="button" class="secondary" onclick="markBriefingItem('${item.item_key}', 'done')">✓ Mark done</button>
+             <button type="button" class="secondary" onclick="markBriefingItem('${item.item_key}', 'dismissed')">Dismiss</button>`
+        }
+        ${item.client_id ? `<button type="button" class="secondary" onclick="openClientFromBriefing(${item.client_id})">Open client →</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function copyDraftToClipboard(itemKey) {
+  if (!briefingData) return;
+  const item = (briefingData.items || []).find(i => i.item_key === itemKey);
+  if (!item) return;
+  const d = item.draft || {};
+  const text = `Subject: ${d.subject || ''}\n\n${d.email_body || ''}\n\n---\nTalking points:\n${(d.talking_points || []).map(t => '- ' + t).join('\n')}`;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Copied to clipboard. Paste into your email.");
+  });
+}
+
+async function markBriefingItem(itemKey, status) {
+  try {
+    await apiPost("/api/briefing/item_status", { item_key: itemKey, status });
+    if (briefingData) {
+      const item = (briefingData.items || []).find(i => i.item_key === itemKey);
+      if (item) item.status = status;
+      paintBriefing(briefingData);
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function openClientFromBriefing(clientId) {
+  selectedClientId = clientId;
+  document.querySelector('[data-view="clients"]').click();
+  loadClientDetail(clientId);
+}
+
+// ---------- News tab ----------
+function renderNews(payload) {
+  const newsBlock = payload.news || { items: [] };
+  const items = newsBlock.items || [];
+  const err = newsBlock.error;
+  function fmtTime(iso) {
+    if (!iso) return "";
+    try {
+      const d = new Date(iso);
+      const diff = (Date.now() - d.getTime()) / 3600000;
+      if (diff < 1) return Math.round(diff * 60) + "m ago";
+      if (diff < 24) return Math.round(diff) + "h ago";
+      if (diff < 168) return Math.round(diff / 24) + "d ago";
+      return d.toLocaleDateString();
+    } catch (e) { return iso; }
+  }
+  const isRecent = iso => {
+    if (!iso) return false;
+    try { return (Date.now() - new Date(iso).getTime()) / 3600000 < 48; }
+    catch(e) { return false; }
+  };
+  const body = err
+    ? `<div class="error show">News fetch failed: ${err}</div>`
+    : (items.length === 0
+        ? `<div class="muted" style="padding:20px 0;">No recent news from Yahoo Finance for this ticker.</div>`
+        : items.map(n => `
+            <div class="news-item">
+              <a href="${n.link || '#'}" target="_blank" rel="noopener">
+                ${isRecent(n.published_at) ? '<span class="badge-new">NEW</span>' : ''}
+                <span class="title">${escapeHtml(n.title)}</span>
+              </a>
+              <div class="meta">${escapeHtml(n.publisher || '')} · ${fmtTime(n.published_at)}</div>
+              ${n.summary ? `<div class="summary">${escapeHtml(n.summary).slice(0, 300)}${n.summary.length > 300 ? '…' : ''}</div>` : ''}
+            </div>
+          `).join("")
+      );
+  document.getElementById("news").innerHTML = tabIntro("news") + `
+    <div class="panel">
+      <h3>Recent News — ${payload.data.ticker}</h3>
+      <div class="tagline">Last refreshed: ${new Date().toLocaleString()} · Source: Yahoo Finance</div>
+      <div style="margin-top:14px;">${body}</div>
+    </div>
+  `;
+}
+
+// ---------- Clients (CRM) tab ----------
+let selectedClientId = null;
+
+async function renderClients(payload) {
+  const clients = payload.allClients || [];
+  const ticker = payload.data ? payload.data.ticker : null;
+  const holders = payload.clientsHolding || [];
+  const tagHistory = payload.clientEvalHistory || [];
+
+  const list = clients.length === 0
+    ? `<div class="muted" style="padding:18px;">No clients yet. Add your first client on the right →</div>`
+    : clients.map(c => `
+        <div class="client-row ${c.id === selectedClientId ? 'active' : ''}" onclick="selectClient(${c.id})">
+          <div class="name">${escapeHtml(c.name)}</div>
+          <div class="meta">${escapeHtml(c.household || '—')} · ${escapeHtml(c.risk_tolerance || 'risk n/a')} · ${escapeHtml(c.account_type || '')}</div>
+          <div class="stats">
+            <span>AUM: ${c.aum ? '$' + Number(c.aum).toLocaleString() : 'n/a'}</span>
+            <span>${c.holding_count} holding${c.holding_count === 1 ? '' : 's'}</span>
+            <span>Tax: ${escapeHtml(c.tax_bracket || 'n/a')}</span>
+          </div>
+        </div>
+      `).join("");
+
+  const whoHoldsBlock = ticker ? `
+    <div class="who-holds">
+      <div class="lbl">Clients currently holding ${ticker}</div>
+      ${holders.length === 0
+        ? `<div class="muted">None of your clients hold this position.</div>`
+        : holders.map(h => `<div>• <strong>${escapeHtml(h.name)}</strong> — ${h.shares} shares${h.cost_basis ? ` @ $${h.cost_basis} basis` : ''}</div>`).join("")
+      }
+      ${tagHistory.length > 0 ? `
+        <div class="lbl" style="margin-top:10px;">Past evaluation tags for ${ticker}</div>
+        ${tagHistory.slice(0, 5).map(t => `<div style="font-size:12.5px;">• <strong>${escapeHtml(t.client_name)}</strong>: ${t.recommendation || '—'} (${t.status}) · ${t.created_at?.slice(0,10)}</div>`).join("")}
+      ` : ''}
+    </div>
+  ` : '';
+
+  document.getElementById("clients").innerHTML = tabIntro("clients") + `
+    <div class="crm-layout">
+      <div>
+        <div class="panel">
+          <h3>Your Clients (${clients.length})</h3>
+          <div class="client-list">${list}</div>
+        </div>
+        ${whoHoldsBlock}
+      </div>
+      <div class="panel" id="clientDetailPanel">
+        ${renderClientDetailHtml(null, ticker)}
+      </div>
+    </div>
+  `;
+
+  if (selectedClientId) {
+    loadClientDetail(selectedClientId);
+  }
+}
+
+function renderClientDetailHtml(client, currentTicker) {
+  const isNew = !client;
+  const c = client || {};
+  return `
+    <h3>${isNew ? 'Add a New Client' : 'Edit Client'}</h3>
+    <div class="tagline">${isNew ? 'Add to your roster. You can tag evaluations to them after.' : 'Saved locally. Click "Save" after edits.'}</div>
+    <div class="crm-form-grid" style="margin-top:14px;">
+      <div><label>Name *</label><input id="cliName" value="${escapeHtml(c.name || '')}" placeholder="Smith Family Trust" /></div>
+      <div><label>Household</label><input id="cliHouse" value="${escapeHtml(c.household || '')}" placeholder="Smith Household" /></div>
+      <div><label>Risk Tolerance</label>
+        <select id="cliRisk">
+          <option value="">— select —</option>
+          ${["conservative","moderate","aggressive"].map(r =>
+            `<option value="${r}" ${c.risk_tolerance===r?'selected':''}>${r}</option>`).join("")}
+        </select>
+      </div>
+      <div><label>Account Type</label>
+        <select id="cliAcct">
+          <option value="">— select —</option>
+          ${["taxable","IRA","Roth","401k","Trust","mixed"].map(r =>
+            `<option value="${r}" ${c.account_type===r?'selected':''}>${r}</option>`).join("")}
+        </select>
+      </div>
+      <div><label>AUM ($)</label><input id="cliAum" type="number" value="${c.aum || ''}" placeholder="500000" /></div>
+      <div><label>Tax Bracket</label><input id="cliTax" value="${escapeHtml(c.tax_bracket || '')}" placeholder="24%, 32%, 37%..." /></div>
+      <div><label>Email</label><input id="cliEmail" value="${escapeHtml(c.contact_email || '')}" /></div>
+      <div><label>Phone</label><input id="cliPhone" value="${escapeHtml(c.contact_phone || '')}" /></div>
+      <div style="grid-column:1/-1;"><label>Notes</label><textarea id="cliNotes" placeholder="Anything relevant to this client — goals, constraints, family situation, recent conversations...">${escapeHtml(c.notes || '')}</textarea></div>
+      <div style="grid-column:1/-1;"><label>Goals (for AI Co-Pilot)</label><textarea id="cliGoals" placeholder="Retirement at 65 with $X/yr income · daughter starting college 2027 · second home in FL · estate planning for kids">${escapeHtml(c.goals || '')}</textarea></div>
+      <div style="grid-column:1/-1;"><label>Recent Life Events (for AI Co-Pilot)</label><textarea id="cliLife" placeholder="Sold business Sep 2025 · grandchild born Jan 2026 · spouse retired · refinanced mortgage">${escapeHtml(c.life_events || '')}</textarea></div>
+      <div style="grid-column:1/-1;"><label>Most Recent Meeting Summary (for AI Co-Pilot)</label><textarea id="cliMeeting" placeholder="3-bullet summary of last conversation — what they care about, concerns, decisions made">${escapeHtml(c.meeting_summary || '')}</textarea></div>
+      <div><label>Last Touchpoint Date</label><input id="cliTouch" type="date" value="${(c.last_touchpoint_at || '').slice(0,10)}" /></div>
+    </div>
+    <div class="crm-actions">
+      <button type="button" onclick="saveClient(${c.id || 'null'})">${isNew ? 'Add Client' : 'Save Changes'}</button>
+      ${!isNew ? `<button type="button" class="secondary" onclick="newClientForm()">+ New</button>` : ''}
+      ${!isNew ? `<button type="button" class="secondary" style="color:var(--red);border-color:var(--red);" onclick="deleteClient(${c.id})">Delete</button>` : ''}
+    </div>
+    ${!isNew ? renderClientHoldings(c, currentTicker) : ''}
+  `;
+}
+
+function renderClientHoldings(c, currentTicker) {
+  const holdings = c.holdings || [];
+  const tagBlock = currentTicker ? `
+    <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--line);">
+      <h4 style="margin:0 0 6px;">Tag ${currentTicker} evaluation to ${escapeHtml(c.name)}</h4>
+      <div class="tagline">Records that you're considering this name for this specific client.</div>
+      <div class="crm-form-grid" style="margin-top:10px;">
+        <div><label>Recommendation</label>
+          <select id="tagRec">
+            <option>BUY</option><option>HOLD</option><option>PASS</option>
+          </select>
+        </div>
+        <div><label>Suggested size (% of AUM)</label>
+          <input id="tagSize" type="number" step="0.5" placeholder="5" />
+        </div>
+        <div><label>Status</label>
+          <select id="tagStatus">
+            <option value="considering">considering</option>
+            <option value="recommended">recommended</option>
+            <option value="executed">executed</option>
+            <option value="rejected">rejected</option>
+          </select>
+        </div>
+        <div style="align-self:flex-end;">
+          <button type="button" onclick="tagCurrentEvaluation(${c.id})">Tag this evaluation</button>
+        </div>
+      </div>
+    </div>
+  ` : '';
+
+  return `
+    <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--line);">
+      <h4 style="margin:0 0 6px;">Current Holdings</h4>
+      <div class="holding-row head"><div>Ticker</div><div>Shares</div><div>Cost basis</div><div>Purchase date</div><div></div></div>
+      ${holdings.length === 0 ? '<div class="muted" style="padding:8px 0;">No holdings recorded yet.</div>' :
+        holdings.map(h => `
+          <div class="holding-row">
+            <div><strong>${escapeHtml(h.ticker)}</strong></div>
+            <div>${h.shares}</div>
+            <div>${h.cost_basis ? '$' + h.cost_basis : '—'}</div>
+            <div>${h.purchase_date || '—'}</div>
+            <div><button type="button" class="secondary" style="padding:5px 9px;font-size:11.5px;" onclick="removeClientHolding(${h.id})">×</button></div>
+          </div>
+        `).join("")
+      }
+      <div class="add-holding-row">
+        <input id="hldTicker" placeholder="Ticker" />
+        <input id="hldShares" type="number" placeholder="Shares" />
+        <input id="hldCost" type="number" placeholder="Cost basis" />
+        <input id="hldDate" type="date" placeholder="Purchase date" />
+        <button type="button" onclick="addClientHolding(${c.id})">+ Add holding</button>
+      </div>
+    </div>
+    ${tagBlock}
+    ${(c.evaluations || []).length > 0 ? `
+      <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--line);">
+        <h4 style="margin:0 0 6px;">Recent Tagged Evaluations</h4>
+        ${c.evaluations.slice(0, 10).map(e => `
+          <div style="padding:8px 0; border-bottom: 1px solid var(--line); font-size:13px;">
+            <strong>${escapeHtml(e.ticker)}</strong> — ${e.recommendation || '—'}
+            ${e.recommended_size_pct ? ` @ ${e.recommended_size_pct}%` : ''}
+            <span class="muted"> · ${e.status} · ${(e.created_at || '').slice(0,10)}</span>
+            ${e.advisor_notes ? `<div class="muted" style="font-size:12px;">${escapeHtml(e.advisor_notes)}</div>` : ''}
+          </div>
+        `).join("")}
+      </div>
+    ` : ''}
+  `;
+}
+
+async function selectClient(id) {
+  selectedClientId = id;
+  if (currentPayload) renderClients(currentPayload);
+  await loadClientDetail(id);
+}
+
+function newClientForm() {
+  selectedClientId = null;
+  document.getElementById("clientDetailPanel").innerHTML =
+    renderClientDetailHtml(null, currentPayload ? currentPayload.data.ticker : null);
+  if (currentPayload) renderClients(currentPayload);
+}
+
+async function loadClientDetail(id) {
+  try {
+    const res = await apiGet(`/api/clients/get?id=${id}`);
+    if (res.ok) {
+      document.getElementById("clientDetailPanel").innerHTML =
+        renderClientDetailHtml(res.client, currentPayload ? currentPayload.data.ticker : null);
+    }
+  } catch (e) { /* ignore */ }
+}
+
+async function saveClient(id) {
+  const v = i => document.getElementById(i).value;
+  const payload = {
+    id: id || undefined,
+    name: v("cliName"),
+    household: v("cliHouse"),
+    risk_tolerance: v("cliRisk"),
+    account_type: v("cliAcct"),
+    aum: v("cliAum"),
+    tax_bracket: v("cliTax"),
+    contact_email: v("cliEmail"),
+    contact_phone: v("cliPhone"),
+    notes: v("cliNotes"),
+    goals: v("cliGoals"),
+    life_events: v("cliLife"),
+    meeting_summary: v("cliMeeting"),
+    last_touchpoint_at: v("cliTouch") || null,
+  };
+  if (!payload.name) { alert("Client name is required."); return; }
+  try {
+    const res = await apiPost("/api/clients/upsert", payload);
+    if (res.ok && res.client) {
+      selectedClientId = res.client.id;
+      const fresh = await apiGet("/api/evaluate?ticker=" + encodeURIComponent(currentPayload?.data?.ticker || "")).catch(()=>null);
+      if (fresh?.ok) { currentPayload = fresh; renderClients(fresh); }
+      else { await refreshClientsList(); }
+      await loadClientDetail(selectedClientId);
+    } else {
+      alert("Save failed: " + (res.error || "unknown"));
+    }
+  } catch (e) {
+    alert("Save failed: " + e.message);
+  }
+}
+
+async function deleteClient(id) {
+  if (!confirm("Delete this client? Their holdings and tags will be removed too.")) return;
+  await apiPost("/api/clients/delete", { id });
+  selectedClientId = null;
+  await refreshClientsList();
+  newClientForm();
+}
+
+async function addClientHolding(clientId) {
+  const v = i => document.getElementById(i).value;
+  try {
+    await apiPost("/api/clients/holding/add", {
+      client_id: clientId,
+      ticker: v("hldTicker"),
+      shares: v("hldShares"),
+      cost_basis: v("hldCost"),
+      purchase_date: v("hldDate"),
+    });
+    await loadClientDetail(clientId);
+  } catch (e) { alert("Add failed: " + e.message); }
+}
+
+async function removeClientHolding(holdingId) {
+  if (!confirm("Remove this holding?")) return;
+  await apiPost("/api/clients/holding/remove", { id: holdingId });
+  await loadClientDetail(selectedClientId);
+}
+
+async function tagCurrentEvaluation(clientId) {
+  if (!currentPayload) return;
+  const v = i => document.getElementById(i).value;
+  try {
+    await apiPost("/api/clients/tag_eval", {
+      client_id: clientId,
+      ticker: currentPayload.data.ticker,
+      evaluation_id: currentPayload.evaluationId,
+      recommendation: v("tagRec"),
+      recommended_size_pct: v("tagSize"),
+      status: v("tagStatus"),
+    });
+    await loadClientDetail(clientId);
+  } catch (e) { alert("Tag failed: " + e.message); }
+}
+
+async function refreshClientsList() {
+  if (!currentPayload) return;
+  try {
+    const res = await apiGet("/api/clients");
+    if (res.ok) {
+      currentPayload.allClients = res.clients;
+      renderClients(currentPayload);
+    }
+  } catch (e) {}
+}
+
+// =====================================================================
+//   WATCHLIST + ALERTS
+// =====================================================================
+
+async function refreshWatchlistView() {
+  let items = [];
+  try {
+    const res = await apiGet("/api/watchlist");
+    if (res.ok) items = res.items || [];
+  } catch (e) { /* ignore — server may be down */ }
+
+  const currentTicker = currentPayload ? currentPayload.data.ticker : null;
+  const alreadyOn = items.some(it => it.ticker === currentTicker);
+
+  const addRow = currentTicker ? `
+    <div class="panel">
+      <h3>Add ${currentTicker} to watchlist</h3>
+      <div class="tagline">${alreadyOn ? "Already on your watchlist — rules below will update if you save." : "Set the thresholds that should fire an alert."}</div>
+      <div class="wl-form-row">
+        <div><label>Daily move ±%</label><input type="number" id="ruleDaily" step="0.5" placeholder="e.g. 5" /></div>
+        <div><label>5-day move ±%</label><input type="number" id="ruleWeekly" step="0.5" placeholder="e.g. 10" /></div>
+        <div><label>Alert if price above $</label><input type="number" id="rulePriceAbove" step="0.01" placeholder="(skip)" /></div>
+        <div><label>Alert if price below $</label><input type="number" id="rulePriceBelow" step="0.01" placeholder="(skip)" /></div>
+        <div><label>Score change ≥</label><input type="number" id="ruleScoreChange" step="1" placeholder="e.g. 3" /></div>
+        <div class="checkbox">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;text-transform:none;">
+            <input type="checkbox" id="rule52High" /> 52w high touch
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;text-transform:none;">
+            <input type="checkbox" id="rule52Low" /> 52w low touch
+          </label>
+        </div>
+      </div>
+      <button type="button" onclick="addCurrentToWatchlist()">${alreadyOn ? "Update rules" : "Add to watchlist"}</button>
+    </div>
+  ` : `
+    <div class="panel">
+      <h3>Add to watchlist</h3>
+      <div class="muted">Evaluate a ticker first, then come back here to add it with custom alert rules.</div>
+    </div>
+  `;
+
+  const listHtml = items.length === 0 ? `<div class="panel"><div class="wl-empty">No tickers on your watchlist yet.</div></div>` : `
+    <div class="panel">
+      <h3>Your Watchlist (${items.length})</h3>
+      <table class="wl-table">
+        <thead><tr><th>Ticker</th><th>Added</th><th>Baseline → Now</th><th>Score Baseline</th><th>Rules</th><th class="actions">Actions</th></tr></thead>
+        <tbody>
+          ${items.map(it => {
+            const chgPct = it.change_since_added_pct;
+            const cls = chgPct === undefined || chgPct === null ? "" : (chgPct >= 0 ? "up" : "down");
+            const chgStr = chgPct === undefined || chgPct === null ? "—" : (chgPct >= 0 ? "+" : "") + chgPct.toFixed(2) + "%";
+            const ruleList = Object.entries(it.rules || {}).map(([k, v]) => v === true ? k : `${k}=${v}`).join(", ") || "none";
+            const priceCol = it.current_price
+              ? `$${it.baseline_price?.toFixed(2) ?? "?"} → $${it.current_price.toFixed(2)} <span class="change ${cls}">(${chgStr})</span>`
+              : `$${it.baseline_price?.toFixed(2) ?? "?"} → n/a`;
+            return `
+              <tr>
+                <td><strong>${it.ticker}</strong></td>
+                <td class="muted">${it.added_at?.slice(0, 10) || "—"}</td>
+                <td>${priceCol}</td>
+                <td>${it.baseline_aggregate ?? "—"}/30</td>
+                <td class="wl-rules-list">${ruleList}</td>
+                <td class="actions">
+                  <button type="button" class="secondary" onclick="evaluateTicker('${it.ticker}')" style="padding:6px 10px;font-size:12px;">Evaluate</button>
+                  <button type="button" class="secondary" onclick="removeWatch(${it.id})" style="padding:6px 10px;font-size:12px;">Remove</button>
+                </td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+      <div style="margin-top:14px;display:flex;gap:10px;">
+        <button type="button" onclick="checkWatchlistNow()">Check all for alerts now</button>
+        <button type="button" class="secondary" onclick="showAlertsTab()">View recent alerts</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("watchlist").innerHTML = tabIntro("watchlist") + `
+    <div class="wl-grid">
+      ${addRow}
+      ${listHtml}
+    </div>
+  `;
+}
+
+async function addCurrentToWatchlist() {
+  if (!currentPayload) return;
+  const ticker = currentPayload.data.ticker;
+  const rules = {};
+  const v = id => document.getElementById(id).value;
+  const c = id => document.getElementById(id).checked;
+  if (v("ruleDaily")) rules.dailyMovePct = parseFloat(v("ruleDaily"));
+  if (v("ruleWeekly")) rules.weeklyMovePct = parseFloat(v("ruleWeekly"));
+  if (v("rulePriceAbove")) rules.priceAbove = parseFloat(v("rulePriceAbove"));
+  if (v("rulePriceBelow")) rules.priceBelow = parseFloat(v("rulePriceBelow"));
+  if (v("ruleScoreChange")) rules.scoreChange = parseFloat(v("ruleScoreChange"));
+  if (c("rule52High")) rules.touch52High = true;
+  if (c("rule52Low")) rules.touch52Low = true;
+  if (Object.keys(rules).length === 0) {
+    rules.dailyMovePct = 5;  // sensible default
+  }
+  try {
+    await apiPost("/api/watchlist/add", { ticker, rules });
+    refreshWatchlistView();
+  } catch (e) {
+    alert("Failed to add to watchlist: " + e.message);
+  }
+}
+
+async function removeWatch(id) {
+  if (!confirm("Remove from watchlist?")) return;
+  await apiPost("/api/watchlist/remove", { id });
+  refreshWatchlistView();
+}
+
+async function checkWatchlistNow() {
+  try {
+    const res = await apiPost("/api/watchlist/check", {});
+    const n = (res.triggered || []).length;
+    if (n > 0) {
+      showAlertsBanner(`${n} new alert${n === 1 ? "" : "s"} triggered.`);
+    }
+    refreshAlertsCount();
+    refreshWatchlistView();
+  } catch (e) {
+    alert("Check failed: " + e.message);
+  }
+}
+
+// ---------- Alerts ----------
+async function refreshAlertsCount() {
+  try {
+    const res = await apiGet("/api/alerts?unacked_only=1");
+    const n = (res.alerts || []).length;
+    const el = document.getElementById("alertsCount");
+    el.textContent = n;
+    el.classList.toggle("has-alerts", n > 0);
+    if (n > 0) {
+      // Show top alert in banner
+      const top = res.alerts[0];
+      showAlertsBanner(top.message + (n > 1 ? `  ·  +${n - 1} more` : ""), n);
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function showAlertsBanner(msg, count) {
+  const banner = document.getElementById("alertsBanner");
+  banner.style.display = "block";
+  banner.innerHTML = `
+    <div class="ab-row">
+      <div>🔔 <strong>${msg}</strong></div>
+      <div>
+        <button type="button" class="secondary" onclick="showAlertsTab()">View all</button>
+        <button type="button" class="secondary" onclick="ackAllAlerts()">Dismiss</button>
+      </div>
+    </div>
+  `;
+}
+
+async function ackAllAlerts() {
+  try {
+    await apiPost("/api/alerts/ack", { all: true });
+    document.getElementById("alertsBanner").style.display = "none";
+    refreshAlertsCount();
+  } catch (e) { /* ignore */ }
+}
+
+function showAlertsTab() {
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(x => x.classList.remove("active"));
+  document.querySelector('[data-view="watchlist"]').classList.add("active");
+  document.getElementById("watchlist").classList.add("active");
+  renderAlertsList();
+}
+
+async function renderAlertsList() {
+  try {
+    const res = await apiGet("/api/alerts");
+    const list = res.alerts || [];
+    const html = list.length === 0
+      ? '<div class="wl-empty">No alerts yet. Add tickers and rules to your watchlist.</div>'
+      : list.map(a => `
+          <div class="event-row">
+            <div>
+              <div><strong>${a.ticker}</strong> · ${a.alert_type}</div>
+              <div class="when">${a.message}</div>
+            </div>
+            <div></div>
+            <div class="when">${a.triggered_at?.slice(0,16).replace("T", " ") || ""}</div>
+          </div>
+        `).join("");
+    // Append below the watchlist view
+    const wlView = document.getElementById("watchlist");
+    const existing = wlView.querySelector(".alerts-list-panel");
+    if (existing) existing.remove();
+    const div = document.createElement("div");
+    div.className = "panel alerts-list-panel";
+    div.style.marginTop = "14px";
+    div.innerHTML = `<h3>Recent alerts</h3>${html}`;
+    wlView.appendChild(div);
+  } catch (e) { /* ignore */ }
+}
+
+// Wire header buttons
+document.getElementById("watchlistBtn").addEventListener("click", () => {
+  document.querySelector('[data-view="watchlist"]').click();
+  // Make sure the main app is visible even without an evaluation
+  document.getElementById("app").style.display = "block";
+  refreshWatchlistView();
+});
+document.getElementById("alertsBtn").addEventListener("click", () => {
+  document.getElementById("app").style.display = "block";
+  showAlertsTab();
+});
+
+// On page load: pull alert count, run a watchlist check, load the briefing
+window.addEventListener("DOMContentLoaded", async () => {
+  // Show the app shell immediately so the briefing tab is visible
+  document.getElementById("app").style.display = "block";
+  // Briefing first — this is the default tab and the user wants to see it immediately
+  renderBriefing();
+  // Run the rest in the background
+  refreshAlertsCount();
+  try { await apiPost("/api/watchlist/check", {}); } catch (e) {}
+  refreshAlertsCount();
+  refreshWatchlistView();
+});
 
 document.getElementById("searchForm").addEventListener("submit", e => {
   e.preventDefault();

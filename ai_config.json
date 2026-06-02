@@ -1,0 +1,6 @@
+{
+  "_comment": "To enable AI-drafted briefing emails and talking points, paste your Anthropic API key below. Get one at https://console.anthropic.com. The model used is claude-haiku-4-5 (fastest, cheapest, ~$3/month at typical small-firm volume). If left empty, briefings still generate but use deterministic templates instead of AI-personalized drafts.",
+  "anthropic_api_key": "",
+  "model": "claude-haiku-4-5",
+  "max_tokens": 800
+}

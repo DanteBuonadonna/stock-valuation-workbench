@@ -1,0 +1,9 @@
+{
+  "firm_name": "[Your Firm Name]",
+  "firm_tagline": "Wealth Management",
+  "advisor_name": "[Advisor Name]",
+  "advisor_credentials": "",
+  "advisor_email": "",
+  "advisor_phone": "",
+  "disclaimer": "This memo is internal decision-support information prepared by an advisor at [Your Firm Name]. It is not a recommendation to buy, sell, or hold any security. Investment decisions should consider the client's full financial situation, risk tolerance, and investment objectives. Past performance does not guarantee future results. Data sourced from Yahoo Finance via yfinance and verified by the advisor at preparation."
+}

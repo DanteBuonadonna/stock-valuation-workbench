@@ -24,6 +24,14 @@ The interactive app shows:
 - **Predictor status** — disabled unless real historical calibration data is available
 - **Your track record** — every past evaluation you've run, with realized returns once they mature
 - **Strengths and red flags** — automatically surfaced
+- **Watchlist + Alerts** — add any ticker with custom thresholds (daily %, weekly %, price targets, 52w high/low touches, score change). Alerts auto-check on page load and on demand
+- **Macro context** — live 10Y Treasury, 13-week T-bill, 30Y Treasury, VIX, DXY, Gold, Oil, SPY — with spread comparisons (FCF yield, dividend yield, earnings yield vs the 10Y)
+- **Events & catalysts** — next earnings date, ex-dividend date, dividend payment date with countdown badges
+- **Tax tags** — auto-detected REIT / MLP / ADR classifications with treatment notes
+- **Income projection** — 5-year cash-collection and DRIP scenarios for dividend payers, configurable position size + growth override
+- **Per-ticker notes** — freeform research notes and meeting talking points, persisted locally
+- **Portfolio fit check** — paste a client's holdings as CSV; the app reports correlation of the candidate to each holding, current and projected sector concentration, and a suggested starter position size
+- **Client memo PDF** — one-click 2-page PDF with the recommendation, key metrics, model breakdown, upcoming catalysts, tax notes, suitability checkboxes, and disclaimer. Firm branding lives in `firm_branding.json`
 
 ## Files
 
@@ -40,7 +48,16 @@ The interactive app shows:
 | `predictor.py` | Maps current score to historical return distribution |
 | `backtest.py` | Generates calibration data |
 | `calibration.json` | Empty calibration table; no seed/mock predictor data |
-| `evaluations.db` | SQLite log of every evaluation you've run |
+| `evaluations.db` | SQLite log of every evaluation, watchlist, alerts, and notes |
+| `watchlist.py` | Watchlist + alert rule engine |
+| `macro.py` | Live macro indicators and spread comparisons vs the 10Y |
+| `events.py` | Earnings calendar and dividend dates |
+| `tax_tags.py` | REIT / MLP / ADR / qualified-dividend tagging |
+| `income_proj.py` | Dividend income projection (cash + DRIP) |
+| `notes_store.py` | Per-ticker research notes and meeting prep |
+| `portfolio_fit.py` | CSV holdings parser, correlation calc, sector concentration, position-size rule |
+| `memo_generator.py` | 2-page client memo PDF generator (uses reportlab) |
+| `firm_branding.json` | Edit this to put your real firm name, advisor name, and disclaimer on the memo |
 
 ## Tuning to your firm's methodology
 
