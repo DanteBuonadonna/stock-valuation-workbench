@@ -9,6 +9,7 @@ If yfinance is unavailable, this module can also be fed a pre-built dict.
 """
 from __future__ import annotations
 import math
+import os
 import time
 import random
 from datetime import datetime, timedelta
@@ -67,8 +68,20 @@ def pct(v: Optional[float]) -> Optional[float]:
 def fetch_ticker_data(ticker: str) -> dict:
     """
     Returns a normalized dict ready for the scoring engine.
-    Requires `yfinance` installed and outbound network access to Yahoo Finance.
+
+    Routing:
+      - If FMP_API_KEY env var is set → use Financial Modeling Prep (works from cloud)
+      - Otherwise → use yfinance + Yahoo Finance (works locally, often blocked on cloud)
     """
+    # Try Financial Modeling Prep first if key is configured (cloud deployment path)
+    if os.environ.get("FMP_API_KEY", "").strip():
+        try:
+            from fmp_fetcher import fetch_ticker_data_fmp
+            return fetch_ticker_data_fmp(ticker)
+        except Exception as exc:
+            # If FMP fails (e.g., quota exhausted), fall through to yfinance
+            print(f"FMP fetch failed for {ticker}: {exc} — falling back to yfinance")
+
     try:
         import yfinance as yf
     except ImportError as e:
@@ -240,6 +253,15 @@ def fetch_ticker_data(ticker: str) -> dict:
 
 def fetch_price_history(ticker: str, period: str = "5y"):
     """Return a pandas Series of daily closing prices, indexed by date."""
+    # Try FMP first if key configured
+    if os.environ.get("FMP_API_KEY", "").strip():
+        try:
+            from fmp_fetcher import fetch_price_history_fmp
+            series = fetch_price_history_fmp(ticker, period)
+            if series is not None and len(series) > 0:
+                return series
+        except Exception:
+            pass
     try:
         import yfinance as yf
         t = yf.Ticker(ticker.upper())
