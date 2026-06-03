@@ -23,7 +23,7 @@ import urllib.parse
 from datetime import datetime
 from typing import Any, Optional
 
-FMP_BASE = "https://financialmodelingprep.com/api/v3"
+FMP_BASE = "https://financialmodelingprep.com/stable"
 
 
 def _has_fmp_key() -> bool:
@@ -31,6 +31,12 @@ def _has_fmp_key() -> bool:
 
 
 def _fmp_get(endpoint: str, params: Optional[dict] = None) -> Any:
+    """
+    Call FMP's new `/stable/` API. The endpoint argument is just the path
+    segment, e.g. 'quote' or 'ratios-ttm'. The ticker should be passed in
+    `params` as `symbol`. We DO NOT silently swallow errors anymore —
+    the caller needs to see what FMP says.
+    """
     key = os.environ.get("FMP_API_KEY", "").strip()
     if not key:
         return None
@@ -40,12 +46,20 @@ def _fmp_get(endpoint: str, params: Optional[dict] = None) -> Any:
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "stock-evaluator/1.0"})
         with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-        # FMP returns {"Error Message": "..."} on auth/quota issues
+            raw = resp.read().decode("utf-8")
+        try:
+            data = json.loads(raw)
+        except Exception:
+            return None
         if isinstance(data, dict) and "Error Message" in data:
-            raise RuntimeError(f"FMP error: {data['Error Message']}")
+            # Surface the FMP error so the caller (and the user) can see it
+            raise RuntimeError(f"FMP {endpoint}: {data['Error Message']}")
         return data
-    except Exception:
+    except RuntimeError:
+        raise  # bubble up FMP error messages
+    except Exception as exc:
+        # Network / parsing failure — log and return None
+        print(f"[fmp_fetcher] {endpoint} request failed: {exc}")
         return None
 
 
@@ -79,10 +93,16 @@ def _pct(v):
 
 def _compute_div_history(ticker: str) -> tuple:
     """Returns (5y CAGR %, years of consecutive increases)."""
-    raw = _fmp_get(f"historical-price-full/stock_dividend/{ticker}")
-    if not raw or not isinstance(raw, dict):
+    raw = _fmp_get("dividends", {"symbol": ticker})
+    if not raw:
         return None, None
-    hist = raw.get("historical") or []
+    # The new endpoint returns a list directly, not a dict with "historical"
+    if isinstance(raw, list):
+        hist = raw
+    elif isinstance(raw, dict):
+        hist = raw.get("historical") or []
+    else:
+        return None, None
     if not hist:
         return None, None
     # Bucket by year, summing all dividend payments in each year
@@ -126,7 +146,7 @@ def _compute_div_history(ticker: str) -> tuple:
 
 def _compute_growth(ticker: str) -> tuple:
     """Returns (revenue growth TTM %, EPS growth TTM %)."""
-    raw = _fmp_get(f"financial-growth/{ticker}", {"limit": 5})
+    raw = _fmp_get("financial-growth", {"symbol": ticker, "limit": 5, "period": "annual"})
     if not raw or not isinstance(raw, list) or not raw:
         return None, None
     latest = raw[0]
@@ -138,7 +158,7 @@ def _compute_growth(ticker: str) -> tuple:
 
 def _compute_forward_pe_and_lt(ticker: str, price: Optional[float]) -> tuple:
     """Returns (forward P/E, LT growth %)."""
-    raw = _fmp_get(f"analyst-estimates/{ticker}", {"limit": 4})
+    raw = _fmp_get("analyst-estimates", {"symbol": ticker, "limit": 4, "period": "annual"})
     if not raw or not isinstance(raw, list) or not raw or not price:
         return None, None
     # Use the next fiscal year's average EPS estimate
@@ -163,8 +183,8 @@ def fetch_ticker_data_fmp(ticker: str) -> dict:
     if not ticker:
         raise RuntimeError("Empty ticker.")
 
-    quote_raw = _fmp_get(f"quote/{ticker}")
-    profile_raw = _fmp_get(f"profile/{ticker}")
+    quote_raw = _fmp_get("quote", {"symbol": ticker})
+    profile_raw = _fmp_get("profile", {"symbol": ticker})
     if not quote_raw or not profile_raw:
         raise RuntimeError(
             f"FMP returned no data for {ticker}. "
@@ -174,8 +194,8 @@ def fetch_ticker_data_fmp(ticker: str) -> dict:
 
     q = _first(quote_raw)
     p = _first(profile_raw)
-    ratios = _first(_fmp_get(f"ratios-ttm/{ticker}"))
-    metrics = _first(_fmp_get(f"key-metrics-ttm/{ticker}"))
+    ratios = _first(_fmp_get("ratios-ttm", {"symbol": ticker}) or [])
+    metrics = _first(_fmp_get("key-metrics-ttm", {"symbol": ticker}) or [])
 
     price = _safe(q.get("price"))
     market_cap = _safe(q.get("marketCap"))
@@ -282,11 +302,17 @@ def fetch_price_history_fmp(ticker: str, period: str = "5y"):
     """Return a pandas Series of daily closing prices, indexed by date."""
     try:
         import pandas as pd
-        # FMP returns ~5y of daily prices by default
-        raw = _fmp_get(f"historical-price-full/{ticker.upper()}")
-        if not raw or not isinstance(raw, dict):
+        # New stable endpoint for end-of-day prices
+        raw = _fmp_get("historical-price-eod/full", {"symbol": ticker.upper()})
+        if not raw:
             return None
-        hist = raw.get("historical") or []
+        # New API returns a list directly
+        if isinstance(raw, list):
+            hist = raw
+        elif isinstance(raw, dict):
+            hist = raw.get("historical") or []
+        else:
+            return None
         if not hist:
             return None
         # Sort ascending by date
