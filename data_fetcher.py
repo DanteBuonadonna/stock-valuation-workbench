@@ -73,14 +73,15 @@ def fetch_ticker_data(ticker: str) -> dict:
       - If FMP_API_KEY env var is set → use Financial Modeling Prep (works from cloud)
       - Otherwise → use yfinance + Yahoo Finance (works locally, often blocked on cloud)
     """
-    # Try Financial Modeling Prep first if key is configured (cloud deployment path)
-    if os.environ.get("FMP_API_KEY", "").strip():
-        try:
-            from fmp_fetcher import fetch_ticker_data_fmp
-            return fetch_ticker_data_fmp(ticker)
-        except Exception as exc:
-            # If FMP fails (e.g., quota exhausted), fall through to yfinance
-            print(f"FMP fetch failed for {ticker}: {exc} — falling back to yfinance")
+    # Try Financial Modeling Prep first if key is configured (cloud deployment path).
+    # We deliberately do NOT fall back to yfinance when an FMP key is configured —
+    # silently masking FMP errors with yfinance failures was making cloud debugging
+    # impossible. If you set FMP_API_KEY, FMP errors surface directly.
+    fmp_key = os.environ.get("FMP_API_KEY", "").strip()
+    if fmp_key:
+        print(f"[data_fetcher] Using FMP for {ticker} (key configured, last 4: ...{fmp_key[-4:]})")
+        from fmp_fetcher import fetch_ticker_data_fmp
+        return fetch_ticker_data_fmp(ticker)
 
     try:
         import yfinance as yf
