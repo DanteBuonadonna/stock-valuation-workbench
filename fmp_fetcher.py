@@ -199,30 +199,47 @@ def fetch_ticker_data_fmp(ticker: str) -> dict:
 
     price = _safe(q.get("price"))
     market_cap = _safe(q.get("marketCap"))
-    shares_out = _safe(q.get("sharesOutstanding"))
-    eps = _safe(q.get("eps"))
 
-    annual_div = _safe(p.get("lastDiv")) or 0
+    # Shares outstanding: not in /stable/quote anymore, derive from market cap / price
+    shares_out = _safe(q.get("sharesOutstanding"))
+    if shares_out is None and market_cap and price and price > 0:
+        shares_out = market_cap / price
+
+    # EPS: not in /stable/quote anymore, use net income per share TTM from ratios
+    eps = _safe(q.get("eps")) or _safe(ratios.get("netIncomePerShareTTM"))
+
+    # Annual dividend: profile.lastDiv OR ratios.dividendPerShareTTM (more reliable on new API)
+    annual_div = _safe(ratios.get("dividendPerShareTTM")) or _safe(p.get("lastDiv")) or 0
     beta = _safe(p.get("beta"))
 
-    # Dividend yield: try multiple FMP fields, all decimals
-    div_yield = (_pct(ratios.get("dividendYielTTM"))
-                  or _pct(ratios.get("dividendYieldTTM"))
-                  or _pct(metrics.get("dividendYieldTTM")))
-    # Fallback: compute from price + lastDiv
+    # Dividend yield — new field name is dividendYieldTTM (single 'd' typo fixed in stable API)
+    div_yield = _pct(ratios.get("dividendYieldTTM"))
     if div_yield is None and annual_div and price and price > 0:
         div_yield = (annual_div / price) * 100.0
 
-    payout = _pct(ratios.get("payoutRatioTTM")) or _pct(metrics.get("payoutRatioTTM"))
+    # New stable field names: dividendPayoutRatioTTM (was payoutRatioTTM)
+    payout = _pct(ratios.get("dividendPayoutRatioTTM"))
 
-    pe = _safe(q.get("pe")) or _safe(ratios.get("priceEarningsRatioTTM"))
-    peg = _safe(ratios.get("priceEarningsToGrowthRatioTTM"))
-    roe = _pct(ratios.get("returnOnEquityTTM"))
-    debt_eq = _safe(ratios.get("debtEquityRatioTTM")) or _safe(metrics.get("debtToEquityTTM"))
+    # New stable field names: priceToEarningsRatioTTM (was priceEarningsRatioTTM)
+    pe = _safe(q.get("pe")) or _safe(ratios.get("priceToEarningsRatioTTM"))
+
+    # New stable: priceToEarningsGrowthRatioTTM (was priceEarningsToGrowthRatioTTM)
+    peg = _safe(ratios.get("priceToEarningsGrowthRatioTTM"))
+
+    # ROE moved from ratios-ttm to key-metrics-ttm in the stable API
+    roe = _pct(metrics.get("returnOnEquityTTM"))
+
+    # New stable: debtToEquityRatioTTM (was debtEquityRatioTTM); also exists as netDebtToEquity in metrics
+    debt_eq = _safe(ratios.get("debtToEquityRatioTTM"))
+
+    # freeCashFlowYieldTTM still in key-metrics-ttm
     fcf_yield = _pct(metrics.get("freeCashFlowYieldTTM"))
 
-    bvps = _safe(metrics.get("bookValuePerShareTTM"))
-    fcf_per_share = _safe(metrics.get("freeCashFlowPerShareTTM"))
+    # Book value per share moved from key-metrics to ratios in the stable API
+    bvps = _safe(ratios.get("bookValuePerShareTTM"))
+
+    # FCF per share moved from key-metrics to ratios
+    fcf_per_share = _safe(ratios.get("freeCashFlowPerShareTTM"))
     free_cf = (fcf_per_share * shares_out) if (fcf_per_share and shares_out) else None
 
     # Dividend coverage
